@@ -14,7 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{D66ED0E5-F
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "img", "img", "{0C870DF1-3768-4802-A9E7-5D3A158508A4}"
 	ProjectSection(SolutionItems) = preProject
-		docs\img\CloneUserSetup1.png = docs\img\CloneUserSetup1.png
+		docs\img\CloneUserSetup11.png = docs\img\CloneUserSetup11.png
 		Schiavone.XrmToolBox.CloneUserSetup\docs\img\CloneUserSetup2.png = Schiavone.XrmToolBox.CloneUserSetup\docs\img\CloneUserSetup2.png
 		Schiavone.XrmToolBox.CloneUserSetup\docs\img\CloneUserSetup3.png = Schiavone.XrmToolBox.CloneUserSetup\docs\img\CloneUserSetup3.png
 		Schiavone.XrmToolBox.CloneUserSetup\docs\img\CloneUserSetup4.png = Schiavone.XrmToolBox.CloneUserSetup\docs\img\CloneUserSetup4.png
