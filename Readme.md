@@ -8,12 +8,15 @@ To use, it couldn't be simpler
 - Click Yes to Confirm.
 ![Alt text](docs/img/CloneUserSetup2.png)
 
-1. The system will set the Business Unit on the Destination to match the Source User,  clone the Security Roles, and finally copy all Team memberships.
+2. The system will set the Business Unit on the Destination to match the Source User,  clone the Security Roles, and finally copy all Team memberships.
 ![Alt text](docs/img/CloneUserSetup3.png)
-![Alt text](docs/img/CloneUserSetup4.png)
 
-1. Finished.  
+
+3. Finished!  Clicking OK will refresh the Destination User.
+![Alt text](docs/img/CloneUserSetup4.png)
+- Source User has been cloned to the Destination User.
 ![Alt text](docs/img/CloneUserSetup5.png)
 
-1. Click the `Open` button on the Source User or the Destination user to navigate to the user record in D365.  It defaults to the legacy interface where you can admin whatever you need to (Security Roles in particular).
+## Notes:
+- Click the `Open` button on the Source User or the Destination user to navigate to the user record in D365.  It defaults to the legacy interface where you can admin whatever you need to (Security Roles in particular).
 If you want the newer UCI interface simply check the `Open Links in UCI Interface` box and then click the `Open` button.
