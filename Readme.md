@@ -1,25 +1,22 @@
 # XrmToolBox.CloneUserSetup
 
-CloneUserSetup will clone Business Unit, Security Roles, and Team memberships from a source user to a destination user.  
-Note the Destination User's Security Business Unit, Security Roles, and Team Memberships will be cleared and replaced with those from the Source User.
+CloneUserSetup will clone Business Unit, Security Roles, and Team memberships from a Source User to a Target User.  
+**Important Note:** the Target User's Business Unit, Security Roles, and Team Memberships will be cleared and replaced with those from the Source User.
 
-To use, it couldn't be simpler:
-1. Pick a Source User and a Destination User and click the `COPY Business Unit, Security Roles, and Teams` button.
+## Usage
+1. Pick a Source User and a Target User and click the `COPY Business Unit, Security Roles, and Teams` button.
 ![Alt text](docs/img/CloneUserSetup1.png)
-- Click Yes to Confirm.
+- Click `Yes` to Confirm.
 ![Alt text](docs/img/CloneUserSetup2.png)
 
-2. The system will set the Business Unit on the Destination to match the Source User,  clone the Security Roles, and finally copy all Team memberships.
+2. The system will set the Business Unit on the Target to match the Source User, then clone the Security Roles and Team Memberships.
+- ![Alt text](docs/img/CloneUserSetup3.png)
 
-![Alt text](docs/img/CloneUserSetup3.png)
-
-
-3. Finished!  Clicking OK will refresh the Destination User.
-
+3. Finished!  Clicking `OK` will refresh the Target User. 
 ![Alt text](docs/img/CloneUserSetup4.png)
-- Source User has been cloned to the Destination User.
+-  The Source User's Busines Unit, Roles, and teams have been cloned to the Target User.
 ![Alt text](docs/img/CloneUserSetup5.png)
 
 ## Notes:
-- Click the `Open` button on the Source User or the Destination user to navigate to the user record in D365.  It defaults to the legacy interface where you can admin whatever you need to (Security Roles in particular).
-If you want the newer UCI interface simply check the `Open Links in UCI Interface` box and then click the `Open` button.
+- Click the `Open` button on the Source User or the Target User to navigate to the user record in Dynamics 365.  It defaults to the legacy interface where you can further administer the Security Roles with ease.
+If you prefer the newer UCI interface simply check the `Open Links in UCI Interface` box and then click the `Open` button.
