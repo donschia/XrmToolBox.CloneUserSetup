@@ -10,7 +10,7 @@ CloneUserSetup will clone Business Unit, Security Roles, and Team memberships fr
 ![Alt text](docs/img/CloneUserSetup2.png)
 
 2. The system will set the Business Unit on the Target to match the Source User, then clone the Security Roles and Team Memberships.  
-- ![Alt text](docs/img/CloneUserSetup3.png)
+    ![Alt text](docs/img/CloneUserSetup3.png)
 
 3. Finished!  Clicking `OK` will refresh the Target User.  
 ![Alt text](docs/img/CloneUserSetup4.png)
