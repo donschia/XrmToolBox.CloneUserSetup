@@ -255,6 +255,7 @@
     <Content Include="Icons\iconfinder_Next_132783.png" />
     <Content Include="Icons\iconfinder_Redo_132718.png" />
     <Content Include="Icons\iconfinder_Sync_132655.png" />
+    <Content Include="Icons\CloneUserSetuipIcon.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="docs\" />
