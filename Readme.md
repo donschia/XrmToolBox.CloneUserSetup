@@ -1,18 +1,21 @@
 # XrmToolBox.CloneUserSetup
 
-CloneUserSetup will clone Business Unit, Security Roles, and Team memberships from a source user to a destination user.
+CloneUserSetup will clone Business Unit, Security Roles, and Team memberships from a source user to a destination user.  
+Note the Destination User's Security Business Unit, Security Roles, and Team Memberships will be cleared and replaced with those from the Source User.
 
-To use, it couldn't be simpler
-1. Pick a source user and a destination user and click the `COPY Business Unit, Security Roles, and Teams` button.
+To use, it couldn't be simpler:
+1. Pick a Source User and a Destination User and click the `COPY Business Unit, Security Roles, and Teams` button.
 ![Alt text](docs/img/CloneUserSetup1.png)
 - Click Yes to Confirm.
 ![Alt text](docs/img/CloneUserSetup2.png)
 
 2. The system will set the Business Unit on the Destination to match the Source User,  clone the Security Roles, and finally copy all Team memberships.
+
 ![Alt text](docs/img/CloneUserSetup3.png)
 
 
 3. Finished!  Clicking OK will refresh the Destination User.
+
 ![Alt text](docs/img/CloneUserSetup4.png)
 - Source User has been cloned to the Destination User.
 ![Alt text](docs/img/CloneUserSetup5.png)
