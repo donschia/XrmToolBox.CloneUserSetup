@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Schiavone.XrmToolBox.CloneUserSetup</RootNamespace>
     <AssemblyName>Schiavone.XrmToolBox.CloneUserSetup</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
@@ -255,7 +255,7 @@
     <Content Include="Icons\iconfinder_Next_132783.png" />
     <Content Include="Icons\iconfinder_Redo_132718.png" />
     <Content Include="Icons\iconfinder_Sync_132655.png" />
-    <Content Include="Icons\CloneUserSetuipIcon.png" />
+    <Content Include="Icons\CloneUserSetup.Icon.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="docs\" />

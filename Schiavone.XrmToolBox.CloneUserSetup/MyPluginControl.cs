@@ -62,7 +62,8 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
                 this.mySettings = new Settings();
                 base.LogWarning("Settings not found => a new settings file has been created!", Array.Empty<object>());
             }
-            base.ExecuteMethod(new Action(this.GetInitialUsers));
+            // This is supposed to force user to connect
+            ExecuteMethod(new Action(this.GetInitialUsers));
         }
 
         //private void MyPluginControl_OnCloseTool(object sender, EventArgs e)
@@ -288,7 +289,7 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
 
         private void btnOpenSource_Click(object sender, EventArgs e)
         {
-            var sourceId = this.Source.SelectedValue.ToString();
+            var sourceId = this.Source?.SelectedValue?.ToString();
             bool forceUci = this.chkOpenLinksInUCI.Checked;
             if (sourceId != null)
             {
@@ -298,7 +299,7 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
 
         private void btnOpenTarget_Click(object sender, EventArgs e)
         {
-            var targetId = this.Target.SelectedValue.ToString();
+            var targetId = this.Target?.SelectedValue?.ToString();
             bool forceUci = this.chkOpenLinksInUCI.Checked;
             if (targetId != null)
             {
@@ -308,9 +309,21 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
 
         private void tsDoTheSync_Click(object sender, EventArgs e)
         {
+            if (base.Service == null)
+            {
+                MessageBox.Show("You must connect to an organization first.");
+                return;
+            }
+            else if (this.Source.SelectedValue == null || this.Target.SelectedValue == null)
+            {
+                MessageBox.Show("Source User and Target User must be selected.");
+                return;
+            }
 
             Guid sourceId = new Guid(this.Source.SelectedValue.ToString());
+            string sourceName = this.Source.Text;
             Guid targetId = new Guid(this.Target.SelectedValue.ToString());
+            string targetName = this.Target.Text;
             Exception exception1 = null;
 
             if (sourceId == targetId)
@@ -319,7 +332,10 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             }
             else
             {
-                DialogResult result = MessageBox.Show("Do you sure you want to copy Business Unit, Security Roles, and Teams from source to target user?", "Confirmation", MessageBoxButtons.YesNoCancel);
+                // Make sure this is what you really want to do
+                DialogResult result = MessageBox.Show($"Are you sure you want to clone Business Unit, Security Roles, and Teams \r\n ... from Source User: {sourceName} \r\n ... to Target User: {targetName} ?",
+                    "Confirmation", MessageBoxButtons.YesNoCancel);
+
                 if (result == DialogResult.Yes)
                 {
                     WorkAsyncInfo workAsyncInfo = new WorkAsyncInfo();
@@ -398,7 +414,7 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
                     {
                         if (exception1 == null)
                         {
-                            MessageBox.Show("Business Unit, Security Roles, and Teams synced.");
+                            MessageBox.Show("Business Unit, Security Roles, and Teams cloned.  Click OK to refresh.");
                             // Refresh lists and keep selected items
                             RefreshUserListsAndKeepSelections();
                             return;
@@ -505,14 +521,15 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
         }
         private void tsbRefreshUserLists_Click(object sender, EventArgs e)
         {
-            RefreshUserListsAndKeepSelections();
+            ExecuteMethod(RefreshUserListsAndKeepSelections);
         }
 
         private void RefreshUserListsAndKeepSelections()
         {
             // Get the selected Source and Taret user so we can preserve them after refreshing user lists
-            var sourceUserId = this.Source.SelectedValue.ToString();
-            var targetUserId = this.Target.SelectedValue.ToString();
+            var sourceUserId = this.Source?.SelectedValue?.ToString();
+            var targetUserId = this.Target?.SelectedValue?.ToString();
+
             // Refresh the lists
             GetUsers(sourceUserId, targetUserId);
         }

@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Schiavone.XrmToolBox.CloneUserSetup")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("XrmToolBox plugin to clone Business Unit, Security Roles, and Team memberships from a Source User to a Target User.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("ONE Gas, Inc.")]
+[assembly: AssemblyCompany("Schiavone")]
 [assembly: AssemblyProduct("Schiavone.XrmToolBox.CloneUserSetup")]
 [assembly: AssemblyCopyright("Copyright © Don Schiavone")]
 [assembly: AssemblyTrademark("")]
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("1.0.5.5")]
+[assembly: AssemblyFileVersion("1.0.5.5")]
