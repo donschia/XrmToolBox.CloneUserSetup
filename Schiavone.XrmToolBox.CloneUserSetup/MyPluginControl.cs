@@ -20,14 +20,11 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
     public partial class MyPluginControl : PluginControlBase
     {
         private Settings mySettings;
-
         private IContainer components;
-
         private ToolStrip toolStripMenu;
-
         private ToolStripButton tsbClose;
-
         private ToolStripSeparator tssSeparator1;
+        const string _DEFAULTTEAMINDICATOR = "(Default Team)";
         public MyPluginControl()
         {
             this.InitializeComponent();
@@ -62,7 +59,8 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
                 this.mySettings = new Settings();
                 base.LogWarning("Settings not found => a new settings file has been created!", Array.Empty<object>());
             }
-            // This is supposed to force user to connect
+
+            // ExecuteMethod() will ask the user to connect
             ExecuteMethod(new Action(this.GetInitialUsers));
         }
 
@@ -86,7 +84,6 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             SettingsManager.Instance.Save(GetType(), mySettings);
         }
 
-
         public static void AddMembersToTeam(Guid teamId, Guid[] membersId, IOrganizationService service)
         {
             AddMembersTeamRequest addMembersTeamRequest = new AddMembersTeamRequest();
@@ -94,8 +91,6 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             addMembersTeamRequest.MemberIds = membersId;
             service.Execute(addMembersTeamRequest);
         }
-
-
 
         private void GetUserRoles(Guid userid, out List<EntityReference> roleIds, out EntityReference erBusinessUnit)
         {
@@ -112,7 +107,6 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             {
                 EntityReference value = (EntityReference)((AliasedValue)entity.Attributes["systemuser1.businessunitid"]).Value;
                 erBusinessUnit = value;
-                //roleIds.Add(new Guid(((AliasedValue)entity.Attributes["role2.roleid"]).Value.ToString()));
                 var er = new EntityReference("role", new Guid(((AliasedValue)entity.Attributes["role2.roleid"]).Value.ToString()));
                 er.Name = ((AliasedValue)entity.Attributes["role2.name"]).Value.ToString();
                 roleIds.Add(er);
@@ -126,7 +120,8 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
         private void GetUsers(string sourceSelectedUserId = null, string targetSelectedUserId = null)
         {
             WorkAsyncInfo workAsyncInfo = new WorkAsyncInfo();
-            workAsyncInfo.Work = ((BackgroundWorker worker, DoWorkEventArgs args) => {
+            workAsyncInfo.Work = ((BackgroundWorker worker, DoWorkEventArgs args) =>
+            {
                 ConditionExpression conditionExpression = new ConditionExpression();
                 conditionExpression.AttributeName = "isdisabled";
                 conditionExpression.Operator = 0;
@@ -147,7 +142,8 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
                 queryExpression.AddOrder("fullname", OrderType.Ascending);
                 args.Result = base.Service.RetrieveMultiple(queryExpression);
             });
-            workAsyncInfo.PostWorkCallBack = ((RunWorkerCompletedEventArgs args) => {
+            workAsyncInfo.PostWorkCallBack = ((RunWorkerCompletedEventArgs args) =>
+            {
                 if (args.Error != null)
                 {
                     MessageBox.Show(args.Error.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
@@ -164,7 +160,6 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
                         TargetListItems.Add(new ListItem($"{result.Entities[i].Attributes["fullname"]} [{((AliasedValue)result.Entities[i].Attributes["bu.name"]).Value}]",
                             result.Entities[i].Attributes["systemuserid"].ToString()));
                     }
-                    // this.Source.SuspendLayout();
                     this.Source.DataSource = sourceListItems;
                     this.Source.DisplayMember = "Text";
                     this.Source.ValueMember = "Value";
@@ -213,10 +208,9 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
                         {
                             isDefault = true;
                         }
-                    
                     }
                     var er = entity.ToEntityReference();
-                    er.Name = $"{entity.GetAttributeValue<string>("name")}{(isDefault?" (Default Team)":"")}";
+                    er.Name = $"{entity.GetAttributeValue<string>("name")}{(isDefault ? $" {_DEFAULTTEAMINDICATOR}" : "")}";
                     teams.Add(er);
                 }
                 userTeams = teams;
@@ -234,10 +228,6 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             removeMembersTeamRequest.TeamId = teamId;
             removeMembersTeamRequest.MemberIds = membersId;
             service.Execute(removeMembersTeamRequest);
-        }
-
-        private void syncRoles_Click(object sender, EventArgs e)
-        {
         }
 
         private void tsbClose_Click(object sender, EventArgs e)
@@ -280,6 +270,7 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
                     entref.LogicalName,
                     "&pagetype=entityrecord&id=",
                     entref.Id.ToString());
+
                 if (!string.IsNullOrEmpty(url))
                 {
                     Process.Start(url);
@@ -329,6 +320,7 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             if (sourceId == targetId)
             {
                 MessageBox.Show("Source and Target user are the same.");
+                return;
             }
             else
             {
@@ -348,7 +340,8 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
                         EntityReference targetBusinessUnit;
                         try
                         {
-                            //TODO: Also sync up the Buisness Group too!
+                            // TODO: Configurable mechanism to copy specified fields from source to target user
+                            // Also sync up any other fields on the User entity too?  Do it here if you need it
 
                             // Get Source Users Security Roles
                             this.GetUserRoles(sourceId, out sourceRoles, out sourceBusinessUnit);
@@ -356,20 +349,22 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
                             this.GetUserRoles(targetId, out targetRoles, out targetBusinessUnit);
 
                             // If Buisness Units are different, change the Target Business Unit to match the Source User's Business Unit 
-
                             if (sourceBusinessUnit.Id != targetBusinessUnit.Id)
                             {
-                                workAsyncInfo.Message = $"Changing Target Business Unit from '{targetBusinessUnit.Name}' to '{sourceBusinessUnit.Name}'";
-                                // (Target User's Security Roles are automatically removed when changing Business Unit)
-                                SetBusinessSystemUserRequest setBusinessSystemUserRequest = new SetBusinessSystemUserRequest();
-                                setBusinessSystemUserRequest.BusinessId = sourceBusinessUnit.Id;
-                                setBusinessSystemUserRequest.UserId = targetId;
-                                setBusinessSystemUserRequest.ReassignPrincipal = new EntityReference("systemuser", targetId);
+                                w.ReportProgress(-1, $"Changing Target User Business Unit from '{targetBusinessUnit.Name}' to '{sourceBusinessUnit.Name}'");
+                                // workAsyncInfo.Message = 
+                                // Target User's Security Roles are automatically removed when changing Business Unit
+                                SetBusinessSystemUserRequest setBusinessSystemUserRequest = new SetBusinessSystemUserRequest
+                                {
+                                    BusinessId = sourceBusinessUnit.Id,
+                                    UserId = targetId,
+                                    ReassignPrincipal = new EntityReference("systemuser", targetId)
+                                };
                                 SetBusinessSystemUserResponse setBusinessSystemUserResponse = (SetBusinessSystemUserResponse)base.Service.Execute(setBusinessSystemUserRequest);
                             }
                             else
                             {
-                                workAsyncInfo.Message = $"Same Source and Target Business Unit. Keeping Target BU as '{sourceBusinessUnit.Name}'";
+                                w.ReportProgress(-1, $"Same Source and Target User Business Unit. Keeping Target User Business Unit as '{sourceBusinessUnit.Name}'");
                                 // Remove Target User's Security Roles
                                 EntityReferenceCollection entityReferenceCollection = new EntityReferenceCollection();
                                 foreach (EntityReference r in targetRoles)
@@ -380,6 +375,7 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
                             }
 
                             // Give the Target User the Source User's security roles 
+                            w.ReportProgress(-1, $"Cloning {sourceRoles.Count} Source User Security Roles.");
                             EntityReferenceCollection entityReferenceCollection1 = new EntityReferenceCollection();
                             foreach (EntityReference r in sourceRoles)
                             {
@@ -391,18 +387,21 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
                             // Get Target User Teams (exclude default teams)
                             bool includeDefaultTeams = false;
                             var targetUserTeams = this.GetUserTeams(targetId, base.Service, includeDefaultTeams);
-                            Guid[] teamIds = new Guid[] { targetId };
+                            var sourceUserTeams = this.GetUserTeams(sourceId, base.Service, includeDefaultTeams);
+                            Guid[] userIds = new Guid[] { targetId };
 
-                            // Remove all Target User teams
+                            w.ReportProgress(-1, $"Cloning {sourceUserTeams.Count} Source User Team Memberships.");
+
+                            // Remove all Target User's teams
                             foreach (var userTeam in targetUserTeams)
                             {
-                                MyPluginControl.RemoveMembersFromTeam(userTeam.Id, teamIds, base.Service);
+                                MyPluginControl.RemoveMembersFromTeam(userTeam.Id, userIds, base.Service);
                             }
 
                             // Put Target User into all Source User's teams
-                            foreach (var userTeam1 in this.GetUserTeams(sourceId, base.Service, includeDefaultTeams))
+                            foreach (var userTeam1 in sourceUserTeams)
                             {
-                                MyPluginControl.AddMembersToTeam(userTeam1.Id, teamIds, base.Service);
+                                MyPluginControl.AddMembersToTeam(userTeam1.Id, userIds, base.Service);
                             }
                         }
                         catch (Exception exception)
@@ -410,6 +409,13 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
                             exception1 = exception;
                         }
                     });
+
+                    workAsyncInfo.ProgressChanged = (evArgs) =>
+                    {
+                        // Show status message
+                        SetWorkingMessage(evArgs.UserState.ToString());
+                    };
+
                     workAsyncInfo.PostWorkCallBack = ((RunWorkerCompletedEventArgs ar) =>
                     {
                         if (exception1 == null)
@@ -440,28 +446,31 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
                 List<EntityReference> sourceRoles;
                 EntityReference sourceBusinessUnit;
                 GetUserRoles(sourceId, out sourceRoles, out sourceBusinessUnit);
-                // Populate the list
-                var list = new List<ListViewItem>();
+                
+                // Populate Source Roles list
+                var rolesList = new List<ListViewItem>();
                 foreach (var r in sourceRoles)
                 {
-                    var item = new ListViewItem { Text = r.Name, Tag = r.Id };
-                    //item.SubItems.Add(r.LogicalName);
-                    list.Add(item);
+                    rolesList.Add(new ListViewItem { Text = r.Name, Tag = r.Id });
                 }
 
-                lvSourceRoles.Items.AddRange(list.ToArray());
+                lvSourceRoles.Items.AddRange(rolesList.ToArray());
                 lvSourceRoles.Sorting = SortOrder.Ascending;
                 lvSourceRoles.Sort();
 
-                // Do the Source Teams List
+                // Populate Source Teams List
                 lvSourceTeams.Items.Clear();
-                //Guid sourceId = new Guid(this.Source.SelectedValue.ToString());
                 List<EntityReference> sourceTeams = GetUserTeams(sourceId, base.Service, includeDefaultTeams);
-                // Populate the list
                 var teamList = new List<ListViewItem>();
                 foreach (var t in sourceTeams)
                 {
-                    teamList.Add(new ListViewItem { Text = t.Name, Tag = t.Id });
+                    teamList.Add(new ListViewItem
+                    {
+                        Text = t.Name,
+                        Tag = t.Id,
+                        ForeColor = t.Name.Contains(_DEFAULTTEAMINDICATOR) ? Color.Gray : Color.Black
+                    }
+                    );
                 }
 
                 lvSourceTeams.Items.AddRange(teamList.ToArray());
@@ -489,34 +498,35 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
                 List<EntityReference> targetRoles;
                 EntityReference sourceBusinessUnit;
                 GetUserRoles(targetId, out targetRoles, out sourceBusinessUnit);
-                // Populate the list
-                var list = new List<ListViewItem>();
+                
+                // Populate Target Roles List
+                var rolesList = new List<ListViewItem>();
                 foreach (var r in targetRoles)
                 {
-                    var item = new ListViewItem { Text = r.Name, Tag = r.Id };
-                    //item.SubItems.Add(r.LogicalName);
-                    list.Add(item);
+                    rolesList.Add(new ListViewItem { Text = r.Name, Tag = r.Id });
                 }
 
-                lvTargetRoles.Items.AddRange(list.ToArray());
+                lvTargetRoles.Items.AddRange(rolesList.ToArray());
                 lvTargetRoles.Sorting = SortOrder.Ascending;
                 lvTargetRoles.Sort();
 
-                // Do the Target Teams List
+                // Populate Target Teams List
                 lvTargetTeams.Items.Clear();
-                //Guid sourceId = new Guid(this.Source.SelectedValue.ToString());
                 List<EntityReference> targetTeams = GetUserTeams(targetId, base.Service, includeDefaultTeams);
-                // Populate the list
                 var teamList = new List<ListViewItem>();
                 foreach (var t in targetTeams)
                 {
-                    teamList.Add(new ListViewItem { Text = t.Name, Tag = t.Id });
+                    teamList.Add(new ListViewItem
+                    {
+                        Text = t.Name,
+                        Tag = t.Id,
+                        ForeColor = t.Name.Contains(_DEFAULTTEAMINDICATOR) ? Color.Gray : Color.Black
+                    });
                 }
 
                 lvTargetTeams.Items.AddRange(teamList.ToArray());
                 lvTargetTeams.Sorting = SortOrder.Ascending;
                 lvTargetTeams.Sort();
-
             }
         }
         private void tsbRefreshUserLists_Click(object sender, EventArgs e)
@@ -526,55 +536,12 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
 
         private void RefreshUserListsAndKeepSelections()
         {
-            // Get the selected Source and Taret user so we can preserve them after refreshing user lists
+            // Get the selected Source and Target user so we can preserve them after refreshing user lists
             var sourceUserId = this.Source?.SelectedValue?.ToString();
             var targetUserId = this.Target?.SelectedValue?.ToString();
 
-            // Refresh the lists
+            // Refresh the lists keeping current selections
             GetUsers(sourceUserId, targetUserId);
         }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
-        /*
-* 
-private void tsbSample_Click(object sender, EventArgs e)
-{
-// The ExecuteMethod method handles connecting to an
-// organization if XrmToolBox is not yet connected
-ExecuteMethod(GetAccounts);
-}
-
-private void GetAccounts()
-{
-WorkAsync(new WorkAsyncInfo
-{
-Message = "Getting accounts",
-Work = (worker, args) =>
-{
-args.Result = Service.RetrieveMultiple(new QueryExpression("account")
-{
-TopCount = 50
-});
-},
-PostWorkCallBack = (args) =>
-{
-if (args.Error != null)
-{
-MessageBox.Show(args.Error.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-}
-var result = args.Result as EntityCollection;
-if (result != null)
-{
-MessageBox.Show($"Found {result.Entities.Count} accounts");
-}
-}
-});
-}
-
-*/
     }
 }
- 

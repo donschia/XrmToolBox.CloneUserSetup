@@ -115,25 +115,25 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             this.toolStripMenu = new System.Windows.Forms.ToolStrip();
             this.tsbClose = new System.Windows.Forms.ToolStripButton();
             this.tssSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsbRefreshUserLists = new System.Windows.Forms.ToolStripButton();
             this.tsDoTheSync = new System.Windows.Forms.ToolStripButton();
             this.chkOpenLinksInUCI = new System.Windows.Forms.CheckBox();
-            this.tsbRefreshUserLists = new System.Windows.Forms.ToolStripButton();
             this.grpSourceUser = new System.Windows.Forms.GroupBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.lvSourceTeams = new System.Windows.Forms.ListView();
-            this.label3 = new System.Windows.Forms.Label();
-            this.lvSourceRoles = new System.Windows.Forms.ListView();
-            this.btnOpenSource = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
+            this.lvSourceTeams = new System.Windows.Forms.ListView();
             this.Source = new System.Windows.Forms.ComboBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.btnOpenSource = new System.Windows.Forms.Button();
+            this.lvSourceRoles = new System.Windows.Forms.ListView();
             this.grpTargetUser = new System.Windows.Forms.GroupBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.lvTargetTeams = new System.Windows.Forms.ListView();
-            this.label4 = new System.Windows.Forms.Label();
-            this.lvTargetRoles = new System.Windows.Forms.ListView();
-            this.btnOpenTarget = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
+            this.lvTargetTeams = new System.Windows.Forms.ListView();
             this.Target = new System.Windows.Forms.ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.btnOpenTarget = new System.Windows.Forms.Button();
+            this.lvTargetRoles = new System.Windows.Forms.ListView();
             this.toolStripMenu.SuspendLayout();
             this.grpSourceUser.SuspendLayout();
             this.grpTargetUser.SuspendLayout();
@@ -167,6 +167,15 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             this.tssSeparator1.Name = "tssSeparator1";
             this.tssSeparator1.Size = new System.Drawing.Size(6, 31);
             // 
+            // tsbRefreshUserLists
+            // 
+            this.tsbRefreshUserLists.Image = ((System.Drawing.Image)(resources.GetObject("tsbRefreshUserLists.Image")));
+            this.tsbRefreshUserLists.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbRefreshUserLists.Name = "tsbRefreshUserLists";
+            this.tsbRefreshUserLists.Size = new System.Drawing.Size(125, 28);
+            this.tsbRefreshUserLists.Text = "Refresh Users";
+            this.tsbRefreshUserLists.Click += new System.EventHandler(this.tsbRefreshUserLists_Click);
+            // 
             // tsDoTheSync
             // 
             this.tsDoTheSync.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -182,19 +191,10 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             this.chkOpenLinksInUCI.AutoSize = true;
             this.chkOpenLinksInUCI.Location = new System.Drawing.Point(28, 31);
             this.chkOpenLinksInUCI.Name = "chkOpenLinksInUCI";
-            this.chkOpenLinksInUCI.Size = new System.Drawing.Size(202, 21);
+            this.chkOpenLinksInUCI.Size = new System.Drawing.Size(188, 20);
             this.chkOpenLinksInUCI.TabIndex = 14;
             this.chkOpenLinksInUCI.Text = "Open Links in UCI Interface";
             this.chkOpenLinksInUCI.UseVisualStyleBackColor = true;
-            // 
-            // tsbRefreshUserLists
-            // 
-            this.tsbRefreshUserLists.Image = ((System.Drawing.Image)(resources.GetObject("tsbRefreshUserLists.Image")));
-            this.tsbRefreshUserLists.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbRefreshUserLists.Name = "tsbRefreshUserLists";
-            this.tsbRefreshUserLists.Size = new System.Drawing.Size(125, 28);
-            this.tsbRefreshUserLists.Text = "Refresh Users";
-            this.tsbRefreshUserLists.Click += new System.EventHandler(this.tsbRefreshUserLists_Click);
             // 
             // grpSourceUser
             // 
@@ -218,12 +218,26 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(13, 327);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(134, 17);
+            this.label6.Size = new System.Drawing.Size(128, 16);
             this.label6.TabIndex = 30;
             this.label6.Text = "Source User Teams";
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Image = ((System.Drawing.Image)(resources.GetObject("label1.Image")));
+            this.label1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label1.Location = new System.Drawing.Point(13, 18);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(113, 16);
+            this.label1.TabIndex = 25;
+            this.label1.Text = "     Source User";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // lvSourceTeams
             // 
+            this.lvSourceTeams.HideSelection = false;
             this.lvSourceTeams.Location = new System.Drawing.Point(16, 347);
             this.lvSourceTeams.Name = "lvSourceTeams";
             this.lvSourceTeams.Size = new System.Drawing.Size(480, 213);
@@ -231,23 +245,24 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             this.lvSourceTeams.UseCompatibleStateImageBehavior = false;
             this.lvSourceTeams.View = System.Windows.Forms.View.List;
             // 
+            // Source
+            // 
+            this.Source.FormattingEnabled = true;
+            this.Source.Location = new System.Drawing.Point(16, 43);
+            this.Source.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Source.Name = "Source";
+            this.Source.Size = new System.Drawing.Size(420, 24);
+            this.Source.TabIndex = 24;
+            this.Source.SelectionChangeCommitted += new System.EventHandler(this.Source_SelectionChangeCommitted);
+            // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(13, 84);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(127, 17);
+            this.label3.Size = new System.Drawing.Size(172, 16);
             this.label3.TabIndex = 28;
-            this.label3.Text = "Source User Roles";
-            // 
-            // lvSourceRoles
-            // 
-            this.lvSourceRoles.Location = new System.Drawing.Point(16, 104);
-            this.lvSourceRoles.Name = "lvSourceRoles";
-            this.lvSourceRoles.Size = new System.Drawing.Size(480, 213);
-            this.lvSourceRoles.TabIndex = 27;
-            this.lvSourceRoles.UseCompatibleStateImageBehavior = false;
-            this.lvSourceRoles.View = System.Windows.Forms.View.List;
+            this.label3.Text = "Source User Security Roles";
             // 
             // btnOpenSource
             // 
@@ -259,28 +274,15 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             this.btnOpenSource.UseVisualStyleBackColor = true;
             this.btnOpenSource.Click += new System.EventHandler(this.btnOpenSource_Click);
             // 
-            // label1
+            // lvSourceRoles
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Image = ((System.Drawing.Image)(resources.GetObject("label1.Image")));
-            this.label1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label1.Location = new System.Drawing.Point(13, 18);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(123, 17);
-            this.label1.TabIndex = 25;
-            this.label1.Text = "     Source User";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // Source
-            // 
-            this.Source.FormattingEnabled = true;
-            this.Source.Location = new System.Drawing.Point(16, 43);
-            this.Source.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.Source.Name = "Source";
-            this.Source.Size = new System.Drawing.Size(420, 24);
-            this.Source.TabIndex = 24;
-            this.Source.SelectionChangeCommitted += new System.EventHandler(this.Source_SelectionChangeCommitted);
+            this.lvSourceRoles.HideSelection = false;
+            this.lvSourceRoles.Location = new System.Drawing.Point(16, 104);
+            this.lvSourceRoles.Name = "lvSourceRoles";
+            this.lvSourceRoles.Size = new System.Drawing.Size(480, 213);
+            this.lvSourceRoles.TabIndex = 27;
+            this.lvSourceRoles.UseCompatibleStateImageBehavior = false;
+            this.lvSourceRoles.View = System.Windows.Forms.View.List;
             // 
             // grpTargetUser
             // 
@@ -304,12 +306,26 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(9, 327);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(131, 17);
+            this.label5.Size = new System.Drawing.Size(125, 16);
             this.label5.TabIndex = 31;
             this.label5.Text = "Target User Teams";
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Image = ((System.Drawing.Image)(resources.GetObject("label2.Image")));
+            this.label2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label2.Location = new System.Drawing.Point(9, 17);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(110, 16);
+            this.label2.TabIndex = 26;
+            this.label2.Text = "     Target User";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // lvTargetTeams
             // 
+            this.lvTargetTeams.HideSelection = false;
             this.lvTargetTeams.Location = new System.Drawing.Point(12, 347);
             this.lvTargetTeams.Name = "lvTargetTeams";
             this.lvTargetTeams.Size = new System.Drawing.Size(548, 213);
@@ -317,23 +333,24 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             this.lvTargetTeams.UseCompatibleStateImageBehavior = false;
             this.lvTargetTeams.View = System.Windows.Forms.View.List;
             // 
+            // Target
+            // 
+            this.Target.FormattingEnabled = true;
+            this.Target.Location = new System.Drawing.Point(12, 43);
+            this.Target.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Target.Name = "Target";
+            this.Target.Size = new System.Drawing.Size(493, 24);
+            this.Target.TabIndex = 25;
+            this.Target.SelectionChangeCommitted += new System.EventHandler(this.Target_SelectionChangeCommitted);
+            // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(9, 84);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(124, 17);
+            this.label4.Size = new System.Drawing.Size(169, 16);
             this.label4.TabIndex = 29;
-            this.label4.Text = "Target User Roles";
-            // 
-            // lvTargetRoles
-            // 
-            this.lvTargetRoles.Location = new System.Drawing.Point(12, 103);
-            this.lvTargetRoles.Name = "lvTargetRoles";
-            this.lvTargetRoles.Size = new System.Drawing.Size(548, 213);
-            this.lvTargetRoles.TabIndex = 28;
-            this.lvTargetRoles.UseCompatibleStateImageBehavior = false;
-            this.lvTargetRoles.View = System.Windows.Forms.View.List;
+            this.label4.Text = "Target User Security Roles";
             // 
             // btnOpenTarget
             // 
@@ -345,28 +362,15 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             this.btnOpenTarget.UseVisualStyleBackColor = true;
             this.btnOpenTarget.Click += new System.EventHandler(this.btnOpenTarget_Click);
             // 
-            // label2
+            // lvTargetRoles
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Image = ((System.Drawing.Image)(resources.GetObject("label2.Image")));
-            this.label2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label2.Location = new System.Drawing.Point(9, 17);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(120, 17);
-            this.label2.TabIndex = 26;
-            this.label2.Text = "     Target User";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // Target
-            // 
-            this.Target.FormattingEnabled = true;
-            this.Target.Location = new System.Drawing.Point(12, 43);
-            this.Target.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.Target.Name = "Target";
-            this.Target.Size = new System.Drawing.Size(493, 24);
-            this.Target.TabIndex = 25;
-            this.Target.SelectionChangeCommitted += new System.EventHandler(this.Target_SelectionChangeCommitted);
+            this.lvTargetRoles.HideSelection = false;
+            this.lvTargetRoles.Location = new System.Drawing.Point(12, 103);
+            this.lvTargetRoles.Name = "lvTargetRoles";
+            this.lvTargetRoles.Size = new System.Drawing.Size(548, 213);
+            this.lvTargetRoles.TabIndex = 28;
+            this.lvTargetRoles.UseCompatibleStateImageBehavior = false;
+            this.lvTargetRoles.View = System.Windows.Forms.View.List;
             // 
             // MyPluginControl
             // 
