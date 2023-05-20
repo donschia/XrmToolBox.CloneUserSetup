@@ -237,8 +237,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Deployment\Schiavone.XrmToolBox.CloneUserSetup.dll.1.0.5.7.Debug.zip" />
+    <None Include="Deployment\Schiavone.XrmToolBox.CloneUserSetup.dll.1.0.5.7.Release.zip" />
     <None Include="packages.config" />
-    <None Include="ReleaseBuild\Schiavone.XrmToolBox.CloneUserSetup.dll.1.0.5.7.zip" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MyPluginControl.resx">
@@ -299,6 +300,6 @@
       xcopy "$(TargetDir)$(TargetFileName)" "$(TargetDir)Plugins\" /Y
       xcopy "$(TargetDir)$(TargetName).pdb" "$(TargetDir)Plugins\" /Y
       )
-if $(ConfigurationName) == Release (powershell Compress-Archive -Path '$(TargetDir)$(TargetFileName)' -DestinationPath "$(ProjectDir)ReleaseBuild\$(TargetFileName).@(Targets->'%(Version)').zip" -Force)</PostBuildEvent>
+powershell Compress-Archive -Path '$(TargetDir)$(TargetFileName)' -DestinationPath "$(ProjectDir)Deployment\$(TargetFileName).@(Targets->'%(Version)').$(ConfigurationName).zip" -Force</PostBuildEvent>
   </PropertyGroup>
 </Project>

@@ -4,7 +4,7 @@ CloneUserSetup will clone Business Unit, Security Roles, and Team memberships fr
 
 > **⚠ IMPORTANT NOTE**  
 > The **Target User**'s Business Unit, Security Roles, and Team Memberships will be cleared and replaced with those from the **Source User**.
-
+ 
 ## Usage
 1. Pick a **Source User** and a **Target User** and click the `COPY Business Unit, Security Roles, and Teams` button.
 ![Alt text](docs/img/CloneUserSetup1.png)

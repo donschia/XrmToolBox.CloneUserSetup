@@ -1,0 +1,13 @@
+ <PropertyGroup>
+    <PostBuildEventDependsOn>
+      $(PostBuildEventDependsOn);
+      PostBuildMacros;
+    </PostBuildEventDependsOn>
+    <PostBuildEvent>echo THE ASSEMBLY VERSION IS: @(Targets->'%(Version)')
+	IF $(ConfigurationName) == Debug (
+      IF NOT EXIST Plugins mkdir Plugins
+      xcopy "$(TargetDir)$(TargetFileName)" "$(TargetDir)Plugins\" /Y
+      xcopy "$(TargetDir)$(TargetName).pdb" "$(TargetDir)Plugins\" /Y
+      )
+powershell Compress-Archive -Path '$(TargetDir)$(TargetFileName)' -DestinationPath "$(ProjectDir)Deployment\$(TargetFileName).@(Targets->'%(Version)').$(ConfigurationName).zip" -Force</PostBuildEvent>
+  </PropertyGroup>
