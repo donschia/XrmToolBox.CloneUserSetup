@@ -249,6 +249,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="bin\Release\Schiavone.XrmToolBox.CloneUserSetup.dll" />
     <Content Include="Icons\iconfinder_Apply_132742.png" />
     <Content Include="Icons\iconfinder_Boss_132688.png" />
     <Content Include="Icons\iconfinder_Male_132787.png" />
@@ -256,7 +257,6 @@
     <Content Include="Icons\iconfinder_Redo_132718.png" />
     <Content Include="Icons\iconfinder_Sync_132655.png" />
     <Content Include="Icons\CloneUserSetup.Icon.png" />
-    <Content Include="Schiavone.XrmToolBox.CloneUserSetup.dll" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="docs\" />
