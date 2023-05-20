@@ -256,6 +256,7 @@
     <Content Include="Icons\iconfinder_Redo_132718.png" />
     <Content Include="Icons\iconfinder_Sync_132655.png" />
     <Content Include="Icons\CloneUserSetup.Icon.png" />
+    <Content Include="Schiavone.XrmToolBox.CloneUserSetup.dll" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="docs\" />
