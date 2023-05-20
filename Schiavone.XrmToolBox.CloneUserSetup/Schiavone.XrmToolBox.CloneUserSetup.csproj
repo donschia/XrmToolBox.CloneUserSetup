@@ -238,6 +238,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="ReleaseBuild\Schiavone.XrmToolBox.CloneUserSetup.dll.1.0.5.7.zip" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MyPluginControl.resx">
@@ -263,7 +264,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent></PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\Microsoft.Web.WebView2.1.0.1343.22\build\Microsoft.Web.WebView2.targets" Condition="Exists('..\packages\Microsoft.Web.WebView2.1.0.1343.22\build\Microsoft.Web.WebView2.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
@@ -281,8 +283,7 @@
   <Target Name="AfterBuild">
   </Target>
 -->
-
-<Target Name="PostBuildMacros">
+  <Target Name="PostBuildMacros">
     <GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
       <Output TaskParameter="Assemblies" ItemName="Targets" />
     </GetAssemblyIdentity>
@@ -291,13 +292,13 @@
     <PostBuildEventDependsOn>
       $(PostBuildEventDependsOn);
       PostBuildMacros;
-    </PostBuildEventDependsOn>   
+    </PostBuildEventDependsOn>
     <PostBuildEvent>echo THE ASSEMBLY VERSION IS: @(Targets->'%(Version)')
 	IF $(ConfigurationName) == Debug (
       IF NOT EXIST Plugins mkdir Plugins
       xcopy "$(TargetDir)$(TargetFileName)" "$(TargetDir)Plugins\" /Y
       xcopy "$(TargetDir)$(TargetName).pdb" "$(TargetDir)Plugins\" /Y
       )
-if $(ConfigurationName) == Release (powershell Compress-Archive -Path '$(TargetDir)$(TargetFileName)' -DestinationPath "$(SolutionDir)ReleaseBuild\$(TargetFileName).@(Targets->'%(Version)').zip" -Force)</PostBuildEvent>
+if $(ConfigurationName) == Release (powershell Compress-Archive -Path '$(TargetDir)$(TargetFileName)' -DestinationPath "$(ProjectDir)ReleaseBuild\$(TargetFileName).@(Targets->'%(Version)').zip" -Force)</PostBuildEvent>
   </PropertyGroup>
 </Project>
