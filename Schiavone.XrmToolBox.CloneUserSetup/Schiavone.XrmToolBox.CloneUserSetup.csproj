@@ -249,7 +249,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="bin\Release\Schiavone.XrmToolBox.CloneUserSetup.dll" />
     <Content Include="Icons\iconfinder_Apply_132742.png" />
     <Content Include="Icons\iconfinder_Boss_132688.png" />
     <Content Include="Icons\iconfinder_Male_132787.png" />
@@ -259,6 +258,7 @@
     <Content Include="Icons\CloneUserSetup.Icon.png" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="bin\Release\" />
     <Folder Include="docs\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -267,7 +267,10 @@
       IF NOT EXIST Plugins mkdir Plugins
       xcopy "$(TargetDir)$(TargetFileName)" "$(TargetDir)Plugins\" /Y
       xcopy "$(TargetDir)$(TargetName).pdb" "$(TargetDir)Plugins\" /Y
-      )</PostBuildEvent>
+      )
+IF $(ConfigurationName) == Release (
+ xcopy "$(TargetDir)$(TargetFileName)" "$(SolutionDir)ReleaseBuild\" /Y
+)</PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\Microsoft.Web.WebView2.1.0.1343.22\build\Microsoft.Web.WebView2.targets" Condition="Exists('..\packages\Microsoft.Web.WebView2.1.0.1343.22\build\Microsoft.Web.WebView2.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
