@@ -22,7 +22,7 @@ CloneUserSetup will clone Business Unit, Security Roles, and Team memberships fr
 ## Notes:
 - Click the `Open` button on the **Source User** or the **Target User** to navigate to the user record in Dynamics 365.  It defaults to the legacy interface where you can further administer the Security Roles with ease.
 If you prefer the newer UCI interface simply check the `Open Links in UCI Interface` box and then click the `Open` button.
-
+ 
 - To debug this plugin you have to [update the link to the included XrmToolbox executable](
 https://www.xrmtoolbox.com/documentation/for-developers/debug/) in your build folder. 
 ![Debugging in Visual Studio](docs/img/Debugging_VisualStudio.png)

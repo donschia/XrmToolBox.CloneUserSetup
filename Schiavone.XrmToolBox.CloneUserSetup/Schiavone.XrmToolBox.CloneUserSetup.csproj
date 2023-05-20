@@ -263,13 +263,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>IF $(ConfigurationName) == Debug (
-      IF NOT EXIST Plugins mkdir Plugins
-      xcopy "$(TargetDir)$(TargetFileName)" "$(TargetDir)Plugins\" /Y
-      xcopy "$(TargetDir)$(TargetName).pdb" "$(TargetDir)Plugins\" /Y
-      )
-if $(ConfigurationName) == Release (powershell Compress-Archive -Path '$(TargetDir)$(TargetFileName)' -DestinationPath '$(SolutionDir)ReleaseBuild\$(TargetFileName).zip' -Force)
-echo $(AssemblyVersion)</PostBuildEvent>
+    <PostBuildEvent></PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\Microsoft.Web.WebView2.1.0.1343.22\build\Microsoft.Web.WebView2.targets" Condition="Exists('..\packages\Microsoft.Web.WebView2.1.0.1343.22\build\Microsoft.Web.WebView2.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
@@ -287,4 +281,23 @@ echo $(AssemblyVersion)</PostBuildEvent>
   <Target Name="AfterBuild">
   </Target>
 -->
+
+<Target Name="PostBuildMacros">
+    <GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
+      <Output TaskParameter="Assemblies" ItemName="Targets" />
+    </GetAssemblyIdentity>
+  </Target>
+  <PropertyGroup>
+    <PostBuildEventDependsOn>
+      $(PostBuildEventDependsOn);
+      PostBuildMacros;
+    </PostBuildEventDependsOn>   
+    <PostBuildEvent>echo THE ASSEMBLY VERSION IS: @(Targets->'%(Version)')
+	IF $(ConfigurationName) == Debug (
+      IF NOT EXIST Plugins mkdir Plugins
+      xcopy "$(TargetDir)$(TargetFileName)" "$(TargetDir)Plugins\" /Y
+      xcopy "$(TargetDir)$(TargetName).pdb" "$(TargetDir)Plugins\" /Y
+      )
+if $(ConfigurationName) == Release (powershell Compress-Archive -Path '$(TargetDir)$(TargetFileName)' -DestinationPath "$(SolutionDir)ReleaseBuild\$(TargetFileName).@(Targets->'%(Version)').zip" -Force)</PostBuildEvent>
+  </PropertyGroup>
 </Project>
