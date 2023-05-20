@@ -1,10 +1,14 @@
-﻿# XrmToolBox.CloneUserSetup
+﻿# Clone User Setup
+XrmToolBox.CloneUserSetup 
 
-CloneUserSetup will clone Business Unit, Security Roles, and Team memberships from a Source User to a Target User.
+**Clone User Setup** will clone Business Unit, Security Roles, and Team memberships from a Source User to a Target User.  This is perfect for setting up a new user based on an existing user.  It is also useful when testing.  In particular, when reproducing an issue as a particular user -- as you can clone the user with issues to a test user that you have access to log in as.
 
 > **⚠ IMPORTANT NOTE**  
 > The **Target User**'s Business Unit, Security Roles, and Team Memberships will be cleared and replaced with those from the **Source User**.
  
+## Installation
+Install the plugin from the XrmToolBox Store (when available) or you can unzip the [prebuilt assembly](https://github.com/donschia/XrmToolBox.CloneUserSetup/tree/master/Schiavone.XrmToolBox.CloneUserSetup/Deployment) to your Plugins folder.  Launch the `Clone User Setup` tool.
+![Store Tool](docs/img/CloneUserSetupTool.png)
 ## Usage
 1. Pick a **Source User** and a **Target User** and click the `COPY Business Unit, Security Roles, and Teams` button.
 ![Alt text](docs/img/CloneUserSetup1.png)
@@ -26,3 +30,4 @@ If you prefer the newer UCI interface simply check the `Open Links in UCI Interf
 - To debug this plugin you have to [update the link to the included XrmToolbox executable](
 https://www.xrmtoolbox.com/documentation/for-developers/debug/) in your build folder. 
 ![Debugging in Visual Studio](docs/img/Debugging_VisualStudio.png)
+
