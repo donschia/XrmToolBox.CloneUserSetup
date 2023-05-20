@@ -24,11 +24,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "img", "img", "{0C870DF1-376
 		docs\img\Debugging_VisualStudio.png = docs\img\Debugging_VisualStudio.png
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ReleaseBuild", "ReleaseBuild", "{199411A1-AB81-40DE-9734-701ECDB41D7B}"
-	ProjectSection(SolutionItems) = preProject
-		ReleaseBuild\Schiavone.XrmToolBox.CloneUserSetup.dll.zip = ReleaseBuild\Schiavone.XrmToolBox.CloneUserSetup.dll.zip
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,7 +41,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{D66ED0E5-FA06-435C-A2BC-A36A43679E37} = {63CF66F8-4930-4CAA-B6A6-78B7A36F6764}
 		{0C870DF1-3768-4802-A9E7-5D3A158508A4} = {D66ED0E5-FA06-435C-A2BC-A36A43679E37}
-		{199411A1-AB81-40DE-9734-701ECDB41D7B} = {63CF66F8-4930-4CAA-B6A6-78B7A36F6764}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DFBCC741-7CDE-421F-82AD-BCE5A555B36C}
