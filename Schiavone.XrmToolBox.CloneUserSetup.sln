@@ -26,7 +26,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "img", "img", "{0C870DF1-376
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ReleaseBuild", "ReleaseBuild", "{199411A1-AB81-40DE-9734-701ECDB41D7B}"
 	ProjectSection(SolutionItems) = preProject
-		ReleaseBuild\Schiavone.XrmToolBox.CloneUserSetup.dll = ReleaseBuild\Schiavone.XrmToolBox.CloneUserSetup.dll
+		ReleaseBuild\Schiavone.XrmToolBox.CloneUserSetup.dll.zip = ReleaseBuild\Schiavone.XrmToolBox.CloneUserSetup.dll.zip
 	EndProjectSection
 EndProject
 Global

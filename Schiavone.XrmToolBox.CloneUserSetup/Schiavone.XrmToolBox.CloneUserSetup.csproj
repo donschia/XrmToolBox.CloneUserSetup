@@ -268,9 +268,8 @@
       xcopy "$(TargetDir)$(TargetFileName)" "$(TargetDir)Plugins\" /Y
       xcopy "$(TargetDir)$(TargetName).pdb" "$(TargetDir)Plugins\" /Y
       )
-IF $(ConfigurationName) == Release (
- xcopy "$(TargetDir)$(TargetFileName)" "$(SolutionDir)ReleaseBuild\" /Y
-)</PostBuildEvent>
+if $(ConfigurationName) == Release (powershell Compress-Archive -Path '$(TargetDir)$(TargetFileName)' -DestinationPath '$(SolutionDir)ReleaseBuild\$(TargetFileName).zip' -Force)
+echo $(AssemblyVersion)</PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\Microsoft.Web.WebView2.1.0.1343.22\build\Microsoft.Web.WebView2.targets" Condition="Exists('..\packages\Microsoft.Web.WebView2.1.0.1343.22\build\Microsoft.Web.WebView2.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
