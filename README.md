@@ -7,7 +7,7 @@ XrmToolBox.CloneUserSetup
 > The **Target User**'s Business Unit, Security Roles, and Team Memberships will be cleared and replaced with those from the **Source User**.
  
 ## Installation
-Install the plugin from the XrmToolBox Store (when available) or you can unzip the [prebuilt assembly](https://github.com/donschia/XrmToolBox.CloneUserSetup/tree/master/Schiavone.XrmToolBox.CloneUserSetup/Deployment) to your Plugins folder.  Launch the `Clone User Setup` tool.
+Install the plugin from the XrmToolBox Store or you can unzip the [prebuilt assembly](https://github.com/donschia/XrmToolBox.CloneUserSetup/tree/master/Schiavone.XrmToolBox.CloneUserSetup/Deployment) to your Plugins folder.  Launch the `Clone User Setup` tool.
 ![Store Tool](docs/img/CloneUserSetupTool.png)
 ## Usage
 1. Pick a **Source User** and a **Target User** and click the `COPY Business Unit, Security Roles, and Teams` button.
