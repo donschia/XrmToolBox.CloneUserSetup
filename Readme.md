@@ -15,8 +15,7 @@ To use, it couldn't be simpler:
 
 
 3. Finished!  Clicking OK will refresh the Destination User.
-
-![Alt text](docs/img/CloneUserSetup4.png)
+- ![Alt text](docs/img/CloneUserSetup4.png)
 - Source User has been cloned to the Destination User.
 ![Alt text](docs/img/CloneUserSetup5.png)
 
