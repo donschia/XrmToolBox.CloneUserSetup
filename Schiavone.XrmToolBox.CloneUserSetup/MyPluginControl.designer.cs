@@ -125,24 +125,26 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             this.label6 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.lvSourceTeams = new System.Windows.Forms.ListView();
-            this.Source = new System.Windows.Forms.ComboBox();
+            this.SourceUser = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.btnOpenSource = new System.Windows.Forms.Button();
             this.lvSourceRoles = new System.Windows.Forms.ListView();
             this.chkChangeBusinessUnit = new System.Windows.Forms.CheckBox();
             this.grpTargetUser = new System.Windows.Forms.GroupBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.btnChangeBusinessUnit = new System.Windows.Forms.Button();
+            this.tvBusinessUnitSelection = new System.Windows.Forms.TreeView();
             this.cboBusinessUnit = new System.Windows.Forms.ComboBox();
             this.chkClearTargetUserRoleListBeforeClone = new System.Windows.Forms.CheckBox();
             this.chkClearTargetTeamListBeforeClone = new System.Windows.Forms.CheckBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.lvTargetTeams = new System.Windows.Forms.ListView();
-            this.Target = new System.Windows.Forms.ComboBox();
+            this.TargetUser = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.btnOpenTarget = new System.Windows.Forms.Button();
             this.lvTargetRoles = new System.Windows.Forms.ListView();
-            this.tvBusinessUnitSelection = new System.Windows.Forms.TreeView();
-            this.btnChangeBusinessUnit = new System.Windows.Forms.Button();
+            this.tsbResetToDefaults = new System.Windows.Forms.ToolStripButton();
             this.toolStripMenu.SuspendLayout();
             this.grpSourceUser.SuspendLayout();
             this.grpTargetUser.SuspendLayout();
@@ -154,12 +156,13 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             this.toolStripMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsbClose,
             this.tssSeparator1,
+            this.tsbResetToDefaults,
             this.tsbRefreshUserLists,
             this.tsDoTheSync});
             this.toolStripMenu.Location = new System.Drawing.Point(0, 0);
             this.toolStripMenu.Name = "toolStripMenu";
             this.toolStripMenu.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
-            this.toolStripMenu.Size = new System.Drawing.Size(1463, 31);
+            this.toolStripMenu.Size = new System.Drawing.Size(1356, 31);
             this.toolStripMenu.TabIndex = 4;
             this.toolStripMenu.Text = "toolStrip1";
             // 
@@ -181,8 +184,8 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             this.tsbRefreshUserLists.Image = ((System.Drawing.Image)(resources.GetObject("tsbRefreshUserLists.Image")));
             this.tsbRefreshUserLists.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbRefreshUserLists.Name = "tsbRefreshUserLists";
-            this.tsbRefreshUserLists.Size = new System.Drawing.Size(105, 28);
-            this.tsbRefreshUserLists.Text = "Refresh Users";
+            this.tsbRefreshUserLists.Size = new System.Drawing.Size(126, 28);
+            this.tsbRefreshUserLists.Text = "Refresh User Lists";
             this.tsbRefreshUserLists.Click += new System.EventHandler(this.tsbRefreshUserLists_Click);
             // 
             // tsDoTheSync
@@ -191,8 +194,8 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             this.tsDoTheSync.Image = ((System.Drawing.Image)(resources.GetObject("tsDoTheSync.Image")));
             this.tsDoTheSync.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsDoTheSync.Name = "tsDoTheSync";
-            this.tsDoTheSync.Size = new System.Drawing.Size(291, 28);
-            this.tsDoTheSync.Text = "COPY Business Unit, Security Roles, and Teams";
+            this.tsDoTheSync.Size = new System.Drawing.Size(206, 28);
+            this.tsDoTheSync.Text = "Apply Changes to TARGET User";
             this.tsDoTheSync.Click += new System.EventHandler(this.tsDoTheSync_Click);
             // 
             // chkOpenLinksInClassicInterface
@@ -217,11 +220,11 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             this.grpSourceUser.Controls.Add(this.label6);
             this.grpSourceUser.Controls.Add(this.label1);
             this.grpSourceUser.Controls.Add(this.lvSourceTeams);
-            this.grpSourceUser.Controls.Add(this.Source);
+            this.grpSourceUser.Controls.Add(this.SourceUser);
             this.grpSourceUser.Controls.Add(this.label3);
             this.grpSourceUser.Controls.Add(this.btnOpenSource);
             this.grpSourceUser.Controls.Add(this.lvSourceRoles);
-            this.grpSourceUser.Location = new System.Drawing.Point(0, 58);
+            this.grpSourceUser.Location = new System.Drawing.Point(4, 58);
             this.grpSourceUser.Name = "grpSourceUser";
             this.grpSourceUser.Size = new System.Drawing.Size(510, 581);
             this.grpSourceUser.TabIndex = 23;
@@ -231,20 +234,20 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             // chkIncludeInactiveUsersInSourceUserList
             // 
             this.chkIncludeInactiveUsersInSourceUserList.AutoSize = true;
-            this.chkIncludeInactiveUsersInSourceUserList.Location = new System.Drawing.Point(16, 58);
+            this.chkIncludeInactiveUsersInSourceUserList.Location = new System.Drawing.Point(16, 59);
             this.chkIncludeInactiveUsersInSourceUserList.Name = "chkIncludeInactiveUsersInSourceUserList";
             this.chkIncludeInactiveUsersInSourceUserList.Size = new System.Drawing.Size(132, 17);
             this.chkIncludeInactiveUsersInSourceUserList.TabIndex = 14;
             this.chkIncludeInactiveUsersInSourceUserList.Text = "Include Inactive Users";
             this.chkIncludeInactiveUsersInSourceUserList.UseVisualStyleBackColor = true;
-            this.chkIncludeInactiveUsersInSourceUserList.CheckedChanged += new System.EventHandler(this.chkOpenLinksInClassicInterface_CheckedChanged);
+            this.chkIncludeInactiveUsersInSourceUserList.CheckedChanged += new System.EventHandler(this.chkIncludeInactiveUsersInSourceUserList_CheckedChanged);
             // 
             // chkCloneSecurityRoles
             // 
             this.chkCloneSecurityRoles.AutoSize = true;
             this.chkCloneSecurityRoles.Checked = true;
             this.chkCloneSecurityRoles.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkCloneSecurityRoles.Location = new System.Drawing.Point(373, 82);
+            this.chkCloneSecurityRoles.Location = new System.Drawing.Point(385, 79);
             this.chkCloneSecurityRoles.Name = "chkCloneSecurityRoles";
             this.chkCloneSecurityRoles.Size = new System.Drawing.Size(124, 17);
             this.chkCloneSecurityRoles.TabIndex = 26;
@@ -257,7 +260,7 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             this.chkCloneTeams.AutoSize = true;
             this.chkCloneTeams.Checked = true;
             this.chkCloneTeams.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkCloneTeams.Location = new System.Drawing.Point(408, 328);
+            this.chkCloneTeams.Location = new System.Drawing.Point(385, 328);
             this.chkCloneTeams.Name = "chkCloneTeams";
             this.chkCloneTeams.Size = new System.Drawing.Size(88, 17);
             this.chkCloneTeams.TabIndex = 27;
@@ -299,13 +302,13 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             // 
             // Source
             // 
-            this.Source.FormattingEnabled = true;
-            this.Source.Location = new System.Drawing.Point(16, 36);
-            this.Source.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.Source.Name = "Source";
-            this.Source.Size = new System.Drawing.Size(420, 21);
-            this.Source.TabIndex = 24;
-            this.Source.SelectionChangeCommitted += new System.EventHandler(this.Source_SelectionChangeCommitted);
+            this.SourceUser.FormattingEnabled = true;
+            this.SourceUser.Location = new System.Drawing.Point(16, 36);
+            this.SourceUser.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.SourceUser.Name = "Source User";
+            this.SourceUser.Size = new System.Drawing.Size(420, 21);
+            this.SourceUser.TabIndex = 24;
+            this.SourceUser.SelectionChangeCommitted += new System.EventHandler(this.Source_SelectionChangeCommitted);
             // 
             // label3
             // 
@@ -351,6 +354,7 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             // grpTargetUser
             // 
             this.grpTargetUser.BackColor = System.Drawing.Color.AliceBlue;
+            this.grpTargetUser.Controls.Add(this.label7);
             this.grpTargetUser.Controls.Add(this.btnChangeBusinessUnit);
             this.grpTargetUser.Controls.Add(this.tvBusinessUnitSelection);
             this.grpTargetUser.Controls.Add(this.cboBusinessUnit);
@@ -360,25 +364,52 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             this.grpTargetUser.Controls.Add(this.label5);
             this.grpTargetUser.Controls.Add(this.label2);
             this.grpTargetUser.Controls.Add(this.lvTargetTeams);
-            this.grpTargetUser.Controls.Add(this.Target);
+            this.grpTargetUser.Controls.Add(this.TargetUser);
             this.grpTargetUser.Controls.Add(this.label4);
             this.grpTargetUser.Controls.Add(this.btnOpenTarget);
             this.grpTargetUser.Controls.Add(this.lvTargetRoles);
-            this.grpTargetUser.Location = new System.Drawing.Point(529, 59);
+            this.grpTargetUser.Location = new System.Drawing.Point(521, 59);
             this.grpTargetUser.Name = "grpTargetUser";
-            this.grpTargetUser.Size = new System.Drawing.Size(911, 580);
+            this.grpTargetUser.Size = new System.Drawing.Size(833, 580);
             this.grpTargetUser.TabIndex = 24;
             this.grpTargetUser.TabStop = false;
             this.grpTargetUser.Text = "TARGET";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(574, 79);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(71, 13);
+            this.label7.TabIndex = 36;
+            this.label7.Text = "Business Unit";
+            // 
+            // btnChangeBusinessUnit
+            // 
+            this.btnChangeBusinessUnit.Location = new System.Drawing.Point(573, 47);
+            this.btnChangeBusinessUnit.Name = "btnChangeBusinessUnit";
+            this.btnChangeBusinessUnit.Size = new System.Drawing.Size(252, 23);
+            this.btnChangeBusinessUnit.TabIndex = 35;
+            this.btnChangeBusinessUnit.Text = "Change Target User\'s Business Unit";
+            this.btnChangeBusinessUnit.UseVisualStyleBackColor = true;
+            this.btnChangeBusinessUnit.Click += new System.EventHandler(this.btnChangeBusinessUnit_Click);
+            // 
+            // tvBusinessUnitSelection
+            // 
+            this.tvBusinessUnitSelection.Location = new System.Drawing.Point(573, 103);
+            this.tvBusinessUnitSelection.Name = "tvBusinessUnitSelection";
+            this.tvBusinessUnitSelection.Size = new System.Drawing.Size(252, 456);
+            this.tvBusinessUnitSelection.TabIndex = 34;
+            this.tvBusinessUnitSelection.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvBusinessUnitSelection_AfterSelect);
             // 
             // cboBusinessUnit
             // 
             this.cboBusinessUnit.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
             this.cboBusinessUnit.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.cboBusinessUnit.FormattingEnabled = true;
-            this.cboBusinessUnit.Location = new System.Drawing.Point(573, 76);
+            this.cboBusinessUnit.Location = new System.Drawing.Point(651, 76);
             this.cboBusinessUnit.Name = "cboBusinessUnit";
-            this.cboBusinessUnit.Size = new System.Drawing.Size(321, 21);
+            this.cboBusinessUnit.Size = new System.Drawing.Size(174, 21);
             this.cboBusinessUnit.TabIndex = 33;
             // 
             // chkClearTargetUserRoleListBeforeClone
@@ -442,13 +473,13 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             // 
             // Target
             // 
-            this.Target.FormattingEnabled = true;
-            this.Target.Location = new System.Drawing.Point(12, 37);
-            this.Target.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.Target.Name = "Target";
-            this.Target.Size = new System.Drawing.Size(493, 21);
-            this.Target.TabIndex = 25;
-            this.Target.SelectionChangeCommitted += new System.EventHandler(this.Target_SelectionChangeCommitted);
+            this.TargetUser.FormattingEnabled = true;
+            this.TargetUser.Location = new System.Drawing.Point(12, 37);
+            this.TargetUser.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.TargetUser.Name = "Target User";
+            this.TargetUser.Size = new System.Drawing.Size(493, 21);
+            this.TargetUser.TabIndex = 25;
+            this.TargetUser.SelectionChangeCommitted += new System.EventHandler(this.Target_SelectionChangeCommitted);
             // 
             // label4
             // 
@@ -480,23 +511,14 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             this.lvTargetRoles.UseCompatibleStateImageBehavior = false;
             this.lvTargetRoles.View = System.Windows.Forms.View.List;
             // 
-            // tvBusinessUnitSelection
+            // tsbResetToDefaults
             // 
-            this.tvBusinessUnitSelection.Location = new System.Drawing.Point(573, 103);
-            this.tvBusinessUnitSelection.Name = "tvBusinessUnitSelection";
-            this.tvBusinessUnitSelection.Size = new System.Drawing.Size(321, 456);
-            this.tvBusinessUnitSelection.TabIndex = 34;
-            this.tvBusinessUnitSelection.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvBusinessUnitSelection_AfterSelect);
-            // 
-            // btnChangeBusinessUnit
-            // 
-            this.btnChangeBusinessUnit.Location = new System.Drawing.Point(573, 47);
-            this.btnChangeBusinessUnit.Name = "btnChangeBusinessUnit";
-            this.btnChangeBusinessUnit.Size = new System.Drawing.Size(321, 23);
-            this.btnChangeBusinessUnit.TabIndex = 35;
-            this.btnChangeBusinessUnit.Text = "Chamge Target User\'s Business Unit";
-            this.btnChangeBusinessUnit.UseVisualStyleBackColor = true;
-            this.btnChangeBusinessUnit.Click += new System.EventHandler(this.btnChangeBusinessUnit_Click);
+            this.tsbResetToDefaults.Image = ((System.Drawing.Image)(resources.GetObject("tsbResetToDefaults.Image")));
+            this.tsbResetToDefaults.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbResetToDefaults.Name = "tsbResetToDefaults";
+            this.tsbResetToDefaults.Size = new System.Drawing.Size(124, 28);
+            this.tsbResetToDefaults.Text = "Reset To Defaults";
+            this.tsbResetToDefaults.Click += new System.EventHandler(this.tsbResetToDefaults_Click);
             // 
             // MyPluginControl
             // 
@@ -509,7 +531,8 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "MyPluginControl";
-            this.Size = new System.Drawing.Size(1463, 639);
+            this.Size = new System.Drawing.Size(1356, 639);
+            this.OnCloseTool += new System.EventHandler(this.MyPluginControl_OnCloseTool);
             this.Load += new System.EventHandler(this.MyPluginControl_Load);
             this.toolStripMenu.ResumeLayout(false);
             this.toolStripMenu.PerformLayout();
@@ -532,7 +555,7 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
         private Label label6;
         private Label label1;
         private ListView lvSourceTeams;
-        private ComboBox Source;
+        private ComboBox SourceUser;
         private Label label3;
         private Button btnOpenSource;
         private ListView lvSourceRoles;
@@ -540,7 +563,7 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
         private Label label5;
         private Label label2;
         private ListView lvTargetTeams;
-        private ComboBox Target;
+        private ComboBox TargetUser;
         private Label label4;
         private Button btnOpenTarget;
         private ListView lvTargetRoles;
@@ -553,5 +576,7 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
         private ComboBox cboBusinessUnit;
         private TreeView tvBusinessUnitSelection;
         private Button btnChangeBusinessUnit;
+        private Label label7;
+        private ToolStripButton tsbResetToDefaults;
     }
 }

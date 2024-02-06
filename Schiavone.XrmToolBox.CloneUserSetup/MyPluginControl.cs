@@ -20,14 +20,18 @@ using System.Collections;
 using System.Web.Services.Description;
 using NuGet;
 using System.Xml.Linq;
+using Newtonsoft.Json.Linq;
 
 namespace Schiavone.XrmToolBox.CloneUserSetup
 {
     public partial class MyPluginControl : PluginControlBase
     {
-        private Settings mySettings;
+        private Settings _mySettings;
+        private CloneSettings _cloneSettings;
 
+#pragma warning disable CS0649 // Field 'MyPluginControl.components' is never assigned to, and will always have its default value null
         private IContainer components;
+#pragma warning restore CS0649 // Field 'MyPluginControl.components' is never assigned to, and will always have its default value null
 
         private ToolStrip toolStripMenu;
 
@@ -35,159 +39,38 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
 
         private ToolStripSeparator tssSeparator1;
 
-        private class CloneSettings
-        {
-            public bool OpenLinksInClassicInterface { get; set; }
-            public bool ChangeBusinessUnit { get; set; }
-
-            public bool CloneSecurityRoles { get; set; }
-            public bool ClearTargetUserRolesListBeforeClone { get; set; }
-
-            public bool CloneTeams { get; set; }
-            public bool ClearTargetTeamsListBeforeClone { get; set; }
-
-            public bool IsThereWorkToBeDone
-            {
-                get { return (this.CloneSecurityRoles || this.CloneTeams);  }
-            }
-            public string GetWorkStepsReport(string delimiter = "\r\n") 
-            {
-                this.WorkSteps.Clear();
-                if (this.CloneSecurityRoles)
-                {
-                    this.WorkSteps.Add("Clone Security Roles");
-                    if (this.ChangeBusinessUnit)
-                    {
-                        this.WorkSteps.Add(" -> Change Business Unit");
-                    }
-                    else
-                    {
-                        this.WorkSteps.Add(" -> * Preserve Target Business Unit");
-                    }
-
-                    if (this.ClearTargetUserRolesListBeforeClone)
-                    {
-                        this.WorkSteps.Add(" -> Clear Target User Roles List Before Clone");
-                    }
-                    else
-                    {
-                        this.WorkSteps.Add(" -> * Preserve Target User Roles");
-                    }
-                }
-                else
-                {
-                    this.WorkSteps.Add("* DO NOT Clone Security Roles");
-                }
-
-                if (this.CloneTeams)
-                {
-                    this.WorkSteps.Add("Clone Teams");
-                    if (this.ClearTargetTeamsListBeforeClone)
-                    {
-                        this.WorkSteps.Add(" -> Clear Target Teams List Before Clone");
-                    }
-                    else
-                    {
-                        this.WorkSteps.Add(" -> * Preserve Target Teams");
-                    }
-                }
-                else
-                {
-                    this.WorkSteps.Add("* DO NOT Clone Teams");
-                }
-                //if (this.WorkSteps.Count == 0)
-                //{
-                //    this.WorkSteps.Add("No Work Selected.");
-                //}
-                return String.Join(delimiter, this.WorkSteps.ToArray());
-            }
-            public List<string> WorkSteps { get; set; } = new List<string>();
-
-            public List<SecurityRole> SecurityRoleMap { get; set; }
-            public List<BusinessUnit> AllBusinessUnits { get; set; }
-        }
-
-        public class BusinessUnit
-        {
-            public EntityReference BU { get; set; }
-            public EntityReference ParentBU { get; set; }
-            public override string ToString()
-            {
-                return $"{this.ParentBU?.Name} -> [{this.BU.Name}]";
-            }
-        }
-
-        public class SecurityRole
-        {
-            public Guid Id { get; set; }
-            public string Name { get; set; }
-            public Guid BusinessUnitId { get; set; }
-            public string BusinessUnitIdName { get; set; }
-
-            public Guid ParentRootRoleId { get; set; }
-            public string ParentRootRoleName { get; set; }
-            public Guid ParentRootRoleBusinessUnitId { get; set; }
-            public string ParentRootRoleBusinessUnitIdName { get; set; }
-
-            public EntityReference ToEntityReference()
-            {
-                return Extensions.GetNamedEntityReference("role", Id, Name);
-            }
-            public override string ToString()
-            {
-                return $"{this.Name} [{this.BusinessUnitIdName}] - {this.ParentRootRoleName} [{this.ParentRootRoleBusinessUnitIdName}]";
-            }
-
-
-        }
         public MyPluginControl()
         {
             this.InitializeComponent();
         }
-
-        /*
+        
+        
         private void MyPluginControl_Load(object sender, EventArgs e)
         {
-            ShowInfoNotification("This is a notification that can lead to XrmToolBox repository", new Uri("https://github.com/MscrmTools/XrmToolBox"));
+            // ShowInfoNotification("This is a notification that can lead to XrmToolBox repository", new Uri("https://github.com/MscrmTools/XrmToolBox"));
 
-            // Loads or creates the settings for the plugin
-            if (!SettingsManager.Instance.TryLoad(GetType(), out mySettings))
-            {
-                mySettings = new Settings();
-
-                LogWarning("Settings not found => a new settings file has been created!");
-            }
-            else
-            {
-                LogInfo("Settings found and loaded");
-            }
-        }
-        */
-        private void MyPluginControl_Load(object sender, EventArgs e)
-        {
-            if (SettingsManager.Instance.TryLoad<Settings>(base.GetType(), out this.mySettings, null))
+            if (SettingsManager.Instance.TryLoad<Settings>(base.GetType(), out this._mySettings, null))
             {
                 base.LogInfo("Settings found and loaded", Array.Empty<object>());
+
+                LoadUIFromSettings();
             }
             else
             {
-                this.mySettings = new Settings();
+                this._mySettings = new Settings();
+
+                // Reset to defaults the first time
+                this._mySettings.ResetToDefaults();
+                LoadUIFromSettings();
+
                 base.LogWarning("Settings not found => a new settings file has been created!", Array.Empty<object>());
             }
 
-            UpdateInterface();
+            RefreshUserInterface();
 
             base.ExecuteMethod(new Action(this.GetInitialData));
         }
 
-        //private void MyPluginControl_OnCloseTool(object sender, EventArgs e)
-        //{
-        //    SettingsManager.Instance.Save(base.GetType(), this.mySettings, null);
-        //}
-        //private void tsbClose_Click(object sender, EventArgs e)
-        //{
-        //    CloseTool();
-        //}
 
         /// <summary>
         /// This event occurs when the plugin is closed
@@ -196,13 +79,21 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
         /// <param name="e"></param>
         private void MyPluginControl_OnCloseTool(object sender, EventArgs e)
         {
+            GetCloneSettingsFromUI();
             // Before leaving, save the settings
-            SettingsManager.Instance.Save(GetType(), mySettings);
+            _mySettings.ChangeBusinessUnit = _cloneSettings.ChangeBusinessUnit;
+            _mySettings.ClearTargetTeamsListBeforeClone = _cloneSettings.ClearTargetTeamsListBeforeClone;
+            _mySettings.ClearTargetUserRolesListBeforeClone = _cloneSettings.ClearTargetUserRolesListBeforeClone;
+            _mySettings.CloneSecurityRoles = _cloneSettings.CloneSecurityRoles;
+            _mySettings.CloneTeams = _cloneSettings.CloneTeams;
+            _mySettings.OpenLinksInClassicInterface = _cloneSettings.OpenLinksInClassicInterface;
+            
+            SettingsManager.Instance.Save(GetType(), _mySettings);
         }
 
         private CloneSettings GetCloneSettingsFromUI(bool deferLoadingSecurityRoleMap = false)
         {
-            return new CloneSettings()
+            _cloneSettings = new CloneSettings()
             {
                 ChangeBusinessUnit = chkChangeBusinessUnit.Checked,
                 ClearTargetTeamsListBeforeClone = chkClearTargetTeamListBeforeClone.Checked,
@@ -212,6 +103,22 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
                 OpenLinksInClassicInterface = chkOpenLinksInClassicInterface.Checked,
                 SecurityRoleMap = deferLoadingSecurityRoleMap ? null : GetSecurityRoleLookup(),
             };
+
+            return _cloneSettings;
+        }
+
+        private void LoadUIFromSettings()
+        {
+            chkChangeBusinessUnit.Checked = _mySettings.ChangeBusinessUnit;
+           
+            chkCloneTeams.Checked = _mySettings.CloneTeams;
+            chkClearTargetTeamListBeforeClone.Checked = _mySettings.ClearTargetUserRolesListBeforeClone;
+
+            chkCloneSecurityRoles.Checked = _mySettings.CloneSecurityRoles;
+            chkClearTargetUserRoleListBeforeClone.Checked = _mySettings.ClearTargetUserRolesListBeforeClone;
+
+            chkOpenLinksInClassicInterface.Checked = _mySettings.OpenLinksInClassicInterface;
+
         }
 
 
@@ -222,7 +129,8 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             addMembersTeamRequest.MemberIds = membersId;
             service.Execute(addMembersTeamRequest);
         }
-        public List<SecurityRole> GetUserRoles(Guid userId) //, out EntityReference erBusinessUnit)
+
+        public List<SecurityRole> GetUserRoles(Guid userId) 
         {
             var securityRoles = new List<SecurityRole>();
 
@@ -270,32 +178,6 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             return securityRoles;
         }
 
-        /*
-
-        private void GetUserRoles(Guid userid, out List<EntityReference> roleIds, out EntityReference erBusinessUnit)
-        {
-            QueryExpression queryExpression = new QueryExpression("systemuserroles");
-            queryExpression.ColumnSet.AddColumns(new string[] { "systemuserid" });
-            queryExpression.Criteria.AddCondition("systemuserid", 0, new object[] { userid });
-            queryExpression.AddLink("systemuser", "systemuserid", "systemuserid", 0).Columns.AddColumns(new string[] { "fullname", "internalemailaddress", "businessunitid" });
-            queryExpression.AddLink("role", "roleid", "roleid", 0).Columns.AddColumns(new string[] { "roleid", "name", "parentrootroleid"});
-            EntityCollection userRoles = base.Service.RetrieveMultiple(queryExpression);
-            roleIds = new List<EntityReference>();
-            erBusinessUnit = new EntityReference(); //new Guid();
-
-            // Getting Business Unit from the Security Roles
-            // This wont work if the user doesn't have any security roles (ie. was just changed to a new Busiess Unit
-            foreach (Entity entity in userRoles.Entities)
-            {
-                EntityReference value = (EntityReference)((AliasedValue)entity.Attributes["systemuser1.businessunitid"]).Value;
-                erBusinessUnit = value;
-                //roleIds.Add(new Guid(((AliasedValue)entity.Attributes["role2.roleid"]).Value.ToString()));
-                var er = new EntityReference("role", new Guid(((AliasedValue)entity.Attributes["role2.roleid"]).Value.ToString()));
-                er.Name = ((AliasedValue)entity.Attributes["role2.name"]).Value.ToString();
-                roleIds.Add(er);
-            }
-        }
-        */
 
         private List<SecurityRole> GetSecurityRoleLookup()
         {
@@ -357,12 +239,14 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             {
                 var parentBusinessUnit = entity.GetAttributeValue<EntityReference>("parentbusinessunitid");
 
+                // Make sure top level business unit has non-null parent so we can put in this into a tree control
                 if (parentBusinessUnit == null)
                 {
                     parentBusinessUnit = Extensions.GetNamedEntityReference("businessunit",
                         Guid.Empty,
                         "[ROOT]");
                 }
+
                 allBusinessUnits.Add(new BusinessUnit()
                 {
                     BU = Extensions.GetNamedEntityReference("businessunit",
@@ -370,14 +254,6 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
                         $"{entity.GetAttributeValue<string>("name")}"),
                     ParentBU = entity.GetAttributeValue<EntityReference>("parentbusinessunitid") ?? parentBusinessUnit
                 });
-                /*
-                 *   BU = Extensions.GetNamedEntityReference("businessunit",
-                        entity.Id,
-                        $"{entity.GetAttributeValue<string>("name")}"),
-                    ParentBU = Extensions.GetNamedEntityReference("parentbusinessunit",
-                        entity.Id,
-                        $"{entity.GetAttributeValue<string>("name")}")
-                */
             }
             return allBusinessUnits;
         }
@@ -385,10 +261,12 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
 
         private void GetInitialData()
         {
+            // Populate User Lists
             GetUsers(null, null);
 
+            // Populate Business Units
             var allBusinessUnitsList = GetAllBusinessUnits();
-            //lbBusinessUnits.DataSource = allBusinessUnitsList
+
             var list = new ListItemCollection();
             foreach (var r in allBusinessUnitsList)
             {
@@ -399,8 +277,7 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             this.cboBusinessUnit.DataSource = list;
             this.cboBusinessUnit.DisplayMember = "Text";
             this.cboBusinessUnit.ValueMember = "Value";
-            //this.cboBusinessUnit.Sorting = SortOrder.Ascending;
-            //cboBusinessUnit.Sort();
+
             FillNode(allBusinessUnitsList, null);
         }
 
@@ -480,23 +357,23 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
                     }
 
                     // this.Source.SuspendLayout();
-                    this.Source.DataSource = sourceListItems;
-                    this.Source.DisplayMember = "Text";
-                    this.Source.ValueMember = "Value";
+                    this.SourceUser.DataSource = sourceListItems;
+                    this.SourceUser.DisplayMember = "Text";
+                    this.SourceUser.ValueMember = "Value";
 
-                    this.Target.DataSource = targetListItems;
-                    this.Target.DisplayMember = "Text";
-                    this.Target.ValueMember = "Value";
+                    this.TargetUser.DataSource = targetListItems;
+                    this.TargetUser.DisplayMember = "Text";
+                    this.TargetUser.ValueMember = "Value";
 
                     // set these back if requested
                     if (sourceSelectedUserId != null)
                     {
-                        this.Source.SelectedValue = sourceSelectedUserId;
+                        this.SourceUser.SelectedValue = sourceSelectedUserId;
                         SourceUserChanged();
                     }
                     if (targetSelectedUserId != null)
                     {
-                        this.Target.SelectedValue = targetSelectedUserId;
+                        this.TargetUser.SelectedValue = targetSelectedUserId;
                         TargetUserChanged();
                     }
 
@@ -567,9 +444,9 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
         {
             base.UpdateConnection(newService, detail, actionName, parameter);
 
-            if (mySettings != null && detail != null)
+            if (_mySettings != null && detail != null)
             {
-                mySettings.LastUsedOrganizationWebappUrl = detail.WebApplicationUrl;
+                _mySettings.LastUsedOrganizationWebappUrl = detail.WebApplicationUrl;
                 LogInfo("Connection has changed to: {0}", detail.WebApplicationUrl);
             }
         }
@@ -604,7 +481,7 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
 
         private void btnOpenSource_Click(object sender, EventArgs e)
         {
-            var sourceId = this.Source.SelectedValue.ToString();
+            var sourceId = this.SourceUser.SelectedValue.ToString();
             bool forceUci = !this.chkOpenLinksInClassicInterface.Checked;
             if (sourceId != null)
             {
@@ -614,7 +491,7 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
 
         private void btnOpenTarget_Click(object sender, EventArgs e)
         {
-            var targetId = this.Target.SelectedValue.ToString();
+            var targetId = this.TargetUser.SelectedValue.ToString();
             bool forceUci = !this.chkOpenLinksInClassicInterface.Checked;
             if (targetId != null)
             {
@@ -630,11 +507,11 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             var cloneSettings = GetCloneSettingsFromUI(deferLoadingSecurityRoleMap: true);
 
 
-            Guid sourceUserId = new Guid(this.Source.SelectedValue.ToString());
-            EntityReference sourceBusinessUnit = Extensions.GetNamedEntityReference("businessunit", new Guid(((System.Web.UI.WebControls.ListItem)this.Source.SelectedItem).Attributes["BusinessUnitId"]), ((System.Web.UI.WebControls.ListItem)this.Source.SelectedItem).Attributes["BusinessUnitName"]);
+            Guid sourceUserId = new Guid(this.SourceUser.SelectedValue.ToString());
+            EntityReference sourceBusinessUnit = Extensions.GetNamedEntityReference("businessunit", new Guid(((System.Web.UI.WebControls.ListItem)this.SourceUser.SelectedItem).Attributes["BusinessUnitId"]), ((System.Web.UI.WebControls.ListItem)this.SourceUser.SelectedItem).Attributes["BusinessUnitName"]);
 
-            Guid targetUserId = new Guid(this.Target.SelectedValue.ToString());
-            EntityReference targetBusinessUnit = Extensions.GetNamedEntityReference("businessunit", new Guid(((System.Web.UI.WebControls.ListItem)this.Target.SelectedItem).Attributes["BusinessUnitId"]), ((System.Web.UI.WebControls.ListItem)this.Target.SelectedItem).Attributes["BusinessUnitName"]);
+            Guid targetUserId = new Guid(this.TargetUser.SelectedValue.ToString());
+            EntityReference targetBusinessUnit = Extensions.GetNamedEntityReference("businessunit", new Guid(((System.Web.UI.WebControls.ListItem)this.TargetUser.SelectedItem).Attributes["BusinessUnitId"]), ((System.Web.UI.WebControls.ListItem)this.TargetUser.SelectedItem).Attributes["BusinessUnitName"]);
             
             Exception exception1 = null;
 
@@ -655,8 +532,10 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
                 DialogResult result = MessageBox.Show($"Are you sure you want to do the following: \r\n{workStepsReport}?", "Confirmation", MessageBoxButtons.YesNoCancel);
                 if (result == DialogResult.Yes)
                 {
-                    WorkAsyncInfo workAsyncInfo = new WorkAsyncInfo();
-                    workAsyncInfo.Message = $"{workStepsReport}"; //  the Business Unit, Security Roles, and Teams
+                    WorkAsyncInfo workAsyncInfo = new WorkAsyncInfo
+                    {
+                        Message = $"{workStepsReport}" //  the Business Unit, Security Roles, and Teams
+                    };
                     workAsyncInfo.Work = ((BackgroundWorker w, DoWorkEventArgs ar) =>
                     {
                         // Now we can do the potentially time consumming load of the Security Role Map
@@ -866,9 +745,9 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
 
         private void SourceUserChanged()
         {
-            if (this.Source.SelectedValue != null)
+            if (this.SourceUser.SelectedValue != null)
             {
-                Guid sourceUserId = new Guid(this.Source.SelectedValue.ToString());
+                Guid sourceUserId = new Guid(this.SourceUser.SelectedValue.ToString());
                 bool includeDefaultTeams = true;
                 lvSourceRoles.Items.Clear();
 
@@ -913,10 +792,10 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
 
         private void TargetUserChanged()
         {
-            if (this.Target.SelectedValue != null)
+            if (this.TargetUser.SelectedValue != null)
             {
-                Guid targetUserId = new Guid(this.Target.SelectedValue.ToString());
-                EntityReference targetBusinessUnit = Extensions.GetNamedEntityReference("businessunit", new Guid(((System.Web.UI.WebControls.ListItem)this.Target.SelectedItem).Attributes["BusinessUnitId"]), ((System.Web.UI.WebControls.ListItem)this.Target.SelectedItem).Attributes["BusinessUnitName"]);
+                Guid targetUserId = new Guid(this.TargetUser.SelectedValue.ToString());
+                EntityReference targetBusinessUnit = Extensions.GetNamedEntityReference("businessunit", new Guid(((System.Web.UI.WebControls.ListItem)this.TargetUser.SelectedItem).Attributes["BusinessUnitId"]), ((System.Web.UI.WebControls.ListItem)this.TargetUser.SelectedItem).Attributes["BusinessUnitName"]);
 
                 bool includeDefaultTeams = true;
                 lvTargetRoles.Items.Clear();
@@ -965,8 +844,8 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
         private void RefreshUserListsAndKeepSelections()
         {
             // Get the selected Source and Taret user so we can preserve them after refreshing user lists
-            var sourceUserId = this.Source.SelectedValue.ToString();
-            var targetUserId = this.Target.SelectedValue.ToString();
+            var sourceUserId = this.SourceUser.SelectedValue.ToString();
+            var targetUserId = this.TargetUser.SelectedValue.ToString();
             bool includeInactiveUsers = chkIncludeInactiveUsersInSourceUserList.Checked;
             // Refresh the lists
             GetUsers(sourceUserId, targetUserId, includeInactiveUsers);
@@ -982,10 +861,8 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
 
         }
 
-        private void UpdateInterface()
+        private void RefreshUserInterface()
         {
-
-
             // Clone Security Roles must be enabled to allow Change Business Unit or Clear Target User Role List
             if (chkCloneSecurityRoles.Checked)
             {
@@ -1049,23 +926,23 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
         }
         private void chkCloneSecurityRoles_CheckedChanged(object sender, EventArgs e)
         {
-            UpdateInterface();
+            RefreshUserInterface();
         }
 
         private void chkCloneTeams_CheckedChanged(object sender, EventArgs e)
         {
 
-            UpdateInterface();
+            RefreshUserInterface();
         }
 
         private void chkClearTargetUserRoleListBeforeClone_CheckedChanged(object sender, EventArgs e)
         {
-            UpdateInterface();
+            RefreshUserInterface();
         }
 
         private void chkClearTargetTeamListBeforeClone_CheckedChanged(object sender, EventArgs e)
         {
-            UpdateInterface();
+            RefreshUserInterface();
         }
 
         private void tvBusinessUnitSelection_AfterSelect(object sender, TreeViewEventArgs e)
@@ -1073,7 +950,7 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             System.Windows.Forms.TreeNode tn = tvBusinessUnitSelection.SelectedNode;
             //MessageBox.Show(string.Format("You selected: {0}, {1}", tn.Text, tn.Tag));
             cboBusinessUnit.SelectedValue = tn.Tag as string;
-            // We can't see it's selected if it's out of focus
+            // Unfortunately we can't see it's selected if it's out of focus
             tvBusinessUnitSelection.Focus();
         }
 
@@ -1081,15 +958,20 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
         {
             // Get the Clone Settings
             var cloneSettings = GetCloneSettingsFromUI(deferLoadingSecurityRoleMap: true);
-            var userFullName = ((System.Web.UI.WebControls.ListItem)this.Target.SelectedItem).Attributes["UserFullName"];
+            var userFullName = ((System.Web.UI.WebControls.ListItem)this.TargetUser.SelectedItem).Attributes["UserFullName"];
 
-            Guid targetUserId = new Guid(this.Target.SelectedValue.ToString());
-            EntityReference targetUserCurrentBusinessUnit = Extensions.GetNamedEntityReference("businessunit", new Guid(((System.Web.UI.WebControls.ListItem)this.Target.SelectedItem).Attributes["BusinessUnitId"]), ((System.Web.UI.WebControls.ListItem)this.Target.SelectedItem).Attributes["BusinessUnitName"]);
+            Guid targetUserId = new Guid(this.TargetUser.SelectedValue.ToString());
+            EntityReference targetUserCurrentBusinessUnit = Extensions.GetNamedEntityReference("businessunit", new Guid(((System.Web.UI.WebControls.ListItem)this.TargetUser.SelectedItem).Attributes["BusinessUnitId"]), ((System.Web.UI.WebControls.ListItem)this.TargetUser.SelectedItem).Attributes["BusinessUnitName"]);
 
 
             EntityReference newBusinessUnit = cboBusinessUnit.SelectedItem!= null ? Extensions.GetNamedEntityReference("businessunit", new Guid(((System.Web.UI.WebControls.ListItem)cboBusinessUnit.SelectedItem).Value), ((System.Web.UI.WebControls.ListItem)cboBusinessUnit.SelectedItem).Text) : null; 
             Exception exception1 = null;
 
+            if (!cloneSettings.CloneSecurityRoles || !cloneSettings.ChangeBusinessUnit)
+            {
+                MessageBox.Show("Be sure to enable Sync Security Roles and Change Business Unit.");
+                return;
+            }
             if (newBusinessUnit == null)
             {
                 MessageBox.Show("Be sure to select the Target User's new Business Unit.");
@@ -1105,8 +987,10 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
                 DialogResult result = MessageBox.Show($"Do you want to change {userFullName}'s business unit from\r\n {targetUserCurrentBusinessUnit.Name} \r\nto\r\n {newBusinessUnit.Name}?", "Confirmation", MessageBoxButtons.YesNoCancel);
                 if (result == DialogResult.Yes)
                 {
-                    WorkAsyncInfo workAsyncInfo = new WorkAsyncInfo();
-                    workAsyncInfo.Message = $"Changing Business Unit"; //  the Business Unit, Security Roles, and Teams
+                    WorkAsyncInfo workAsyncInfo = new WorkAsyncInfo
+                    {
+                        Message = $"Changing Business Unit" //  the Business Unit, Security Roles, and Teams
+                    };
                     workAsyncInfo.Work = ((BackgroundWorker w, DoWorkEventArgs ar) =>
                     {
                         // Now we can do the potentially time consumming load of the Security Role Map
@@ -1131,10 +1015,12 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
                                     workAsyncInfo.Message = $"Changing Target Business Unit from '{targetUserCurrentBusinessUnit.Name}' to '{newBusinessUnit.Name}'";
 
                                     // Change Business unit, which automatically clears the Target User's Security Roles
-                                    SetBusinessSystemUserRequest setBusinessSystemUserRequest = new SetBusinessSystemUserRequest();
-                                    setBusinessSystemUserRequest.BusinessId = newBusinessUnit.Id;
-                                    setBusinessSystemUserRequest.UserId = targetUserId;
-                                    setBusinessSystemUserRequest.ReassignPrincipal = new EntityReference("systemuser", targetUserId);
+                                    SetBusinessSystemUserRequest setBusinessSystemUserRequest = new SetBusinessSystemUserRequest
+                                    {
+                                        BusinessId = newBusinessUnit.Id,
+                                        UserId = targetUserId,
+                                        ReassignPrincipal = new EntityReference("systemuser", targetUserId)
+                                    };
                                     SetBusinessSystemUserResponse setBusinessSystemUserResponse = (SetBusinessSystemUserResponse)base.Service.Execute(setBusinessSystemUserRequest);
 
                                     // We will preserve the target user's roles
@@ -1188,6 +1074,18 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
                 }
 
             }
+        }
+
+        private void chkIncludeInactiveUsersInSourceUserList_CheckedChanged(object sender, EventArgs e)
+        {
+            RefreshUserListsAndKeepSelections();
+        }
+
+        private void tsbResetToDefaults_Click(object sender, EventArgs e)
+        {
+            _mySettings.ResetToDefaults();
+            LoadUIFromSettings();
+
         }
 
         /*

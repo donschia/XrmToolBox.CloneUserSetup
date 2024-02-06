@@ -205,8 +205,10 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
 
         public static EntityReference GetNamedEntityReference(string entityType, Guid Id, string Name)
         {
-            var entityReference = new EntityReference(entityType, Id);
-            entityReference.Name = Name;
+            var entityReference = new EntityReference(entityType, Id)
+            {
+                Name = Name
+            };
             return entityReference;
         }
 
