@@ -8,12 +8,12 @@ using XrmToolBox.Extensibility;
 using XrmToolBox.Extensibility.Interfaces;
 
 namespace Schiavone.XrmToolBox.CloneUserSetup
-{
+{ 
     // Do not forget to update version number and author (company attribute) in AssemblyInfo.cs class
     // To generate Base64 string for Images below, you can use https://www.base64-image.de/
     [Export(typeof(IXrmToolBoxPlugin)),
         ExportMetadata("Name", "Clone User Setup"),
-        ExportMetadata("Description", "Copies Business Unit, Security Roles, and Teams from source user to target user."),
+        ExportMetadata("Description", "XrmToolBox plugin will clone Business Unit, Security Roles, and Team memberships from a Source User to a Target User."),
         // Please specify the base64 content of a 32x32 pixels image
         ExportMetadata("SmallImageBase64", "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAQ3SURBVFhHzZZBiFxFEIaregZdYsBFM7MKC0aIsGLABQ0sGHAXA14iGMxBQSE5BBFc9KCgqPQ8cvCiGDDiRUggBiMK6smTuIsrGFkxooE9eFhhD2bGxA1sQpCZLv+q1zPOm30z83ZH0A9mqrtev9fV1VXVTf81HGU+d/kxd52eF+ZHWGhKmFZY5Kuwg07Sb8mNOGok+htwu59yJf4MralUkWEliDxGjeTX2N82LspNOMenIKaE6NPAcneo1xiT3qN91TviM0S+bIP/bUoT/qCr1oQrNfXAJrha+1Kfuwn/ZFRtm1wPBOGHVDqW90zRgyN5W6UIP2CKEcjfAqFxFS2m363fQ0cvtNPkCOQawCTnVTqh/abooa1nlh9MMQL5W+BoAaKJKd6kCb831UasDz2eB7FxI9E3DV3VP43HiHTaQOSfhlcuCvF9eOEIdHC9HAv15AMbfJuf5BK/xkwz6E1ja1ZRM5ZFY6WefGdj+jCwECHaP8GAw7HbzXJoyiG6kqxZJgi/D53GzQYm/wVyD768C7IJ409IvfYy2rnkGODLropVCr+Ap1n3Z1lAfZh3wj9aT+TV0EjesjZAKs8iS9SDk3g2j2cn0ydZegzwZa7yR3HVav3nKL3n4doLLbi15PRjNI40fRTuPevYYgEB2bUd3Uz43TDwZ23CY/eqx0zfRcaALpevBJKjA/fvVj/ubuY/0VpGldyXKjeDWHodXz4OLxyFF05HdYdOFpQq/nBncpF9w4KndJMFHBxCg4NMaFklDrTcohUN8GUMSFNLV95INlL9AJjGTEqU/XDUPi9yi5YZUKrQAYg9InRu2MrbtFq0ohJegyf6H0rtso40/skUPZgBcKNFOyrbtyoLcTlRA5bw5b3ImldSZQ8VPw0DX8IEN1C0zkVthmgA368Sgwqtvk1oyTEInAt8HAF8qlM1UZgQfC8iS77RLlb/DLY191yxLMDR+jXErJ77dClZVV1h0ouLvn9HqsjQRBo/1WokeofIJWMAYuAE/HFVdf3Q2oDVXLCOuZifQJ3Q8jxpuiwbGlc41j9u1fXcSHC+ZMkYoO2haD7jVoSJz2Dix6NWWYd167GtX9bs6PbKGrbsEGLH0rKNGaArQZWzO8AwWoHWsbd6XZvGbw0GvQGDlnLvh3f6XaVAMyHwszD2oAYjVvBcd0FKDdgC8JYG1n649kP5S+bpavLPqgfgKv4I0uxdNMes0MVt7FTCIqRHNGo/skUaKFgFJ1ds1Tiw0CzDg++kWtSgKAvBO+a+gBgLTuboWnIl1RZHri9+T7fMzsDtB9zOhxfl2uJqcQ9gP7Fhu5EFS1tO1S5QE86qlEAPqixsQKmZvoAvpCm4TUJ8H8XPDqfCBnTKtchFU2yXS4nemBCPaYoWzgKu+Boze1jyB7rDT8tBYCvxv4B7xNyWssDQu55+YJTf/weivwEkcIzMZzoxdwAAAABJRU5ErkJggg=="),
         // Please specify the base64 content of a 80x80 pixels image
