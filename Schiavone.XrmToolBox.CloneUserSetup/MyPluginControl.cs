@@ -538,7 +538,7 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
                     };
                     workAsyncInfo.Work = ((BackgroundWorker w, DoWorkEventArgs ar) =>
                     {
-                        // Now we can do the potentially time consumming load of the Security Role Map
+                        // Now we can do the potentially time consuming load of the Security Role Map
                         cloneSettings = GetCloneSettingsFromUI(deferLoadingSecurityRoleMap: false);
 
                         var sourceUserRoles = new List<SecurityRole>();
@@ -547,8 +547,10 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
                         try
                         {
                             // TODO: Perhaps there is a way to mark a user so that it is immune to this to prevent modifying Service Accounts, protected users, test account, etc.
-                            // TODO: Also sync up any other fields (configurable) here too? i.e.  Business Group
-                            // TODO: Logging!  I would like to collect all of the Messages and also howbout we log what we did regarding the adding and removing Roles and Teams?
+                            // TODO: Perhaps it would be useful to write a note to the Target User indicating what was done so we would know where the current BU, Roles, and Teams came from?
+                            // TODO: Also sync up any other fields (configurable) here too? i.e.  Custom fields such as Business Group
+                            // TODO: Logging!  I would like to collect all of the Messages and also how about we log what we did regarding the adding and removing Roles and Teams?
+
 
                             // Get Source User Security Roles
                             sourceUserRoles = GetUserRoles(sourceUserId);
@@ -587,7 +589,7 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
                                         // If we want to preserve the target user's roles, we can add them back in
                                         if (!cloneSettings.ClearTargetUserRolesListBeforeClone)
                                         {
-                                            // Get reference to source role's ParentRootRole and then we will use that to find a new role with the current Buisness Unit
+                                            // Get reference to source role's ParentRootRole and then we will use that to find a new role with the current Business Unit
                                             var targetUserRolesToRestoreAfterClone = new EntityReferenceCollection();
                                             foreach (var r in targetUserRoles)
                                             {
@@ -843,7 +845,7 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
 
         private void RefreshUserListsAndKeepSelections()
         {
-            // Get the selected Source and Taret user so we can preserve them after refreshing user lists
+            // Get the selected Source and Target user so we can preserve them after refreshing user lists
             var sourceUserId = this.SourceUser.SelectedValue.ToString();
             var targetUserId = this.TargetUser.SelectedValue.ToString();
             bool includeInactiveUsers = chkIncludeInactiveUsersInSourceUserList.Checked;
@@ -993,7 +995,7 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
                     };
                     workAsyncInfo.Work = ((BackgroundWorker w, DoWorkEventArgs ar) =>
                     {
-                        // Now we can do the potentially time consumming load of the Security Role Map
+                        // Now we can do the potentially time consuming load of the Security Role Map
                         cloneSettings = GetCloneSettingsFromUI(deferLoadingSecurityRoleMap: false);
 
                         //var sourceUserRoles = new List<SecurityRole>();
@@ -1025,7 +1027,7 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
 
                                     // We will preserve the target user's roles
 
-                                    // Get reference to source role's ParentRootRole and then we will use that to find a new role with the current Buisness Unit
+                                    // Get reference to source role's ParentRootRole and then we will use that to find a new role with the current Business Unit
                                     var targetUserRolesToRestoreAfterClone = new EntityReferenceCollection();
                                     foreach (var r in targetUserRoles)
                                     {
