@@ -15,5 +15,24 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
     public class Settings
     {
         public string LastUsedOrganizationWebappUrl { get; set; }
+        public bool OpenLinksInClassicInterface { get; set; }
+        public bool ChangeBusinessUnit { get; set; }
+
+        public bool CloneSecurityRoles { get; set; }
+        public bool ClearTargetUserRolesListBeforeClone { get; set; }
+
+        public bool CloneTeams { get; set; }
+        public bool ClearTargetTeamsListBeforeClone { get; set; }
+
+        public void ResetToDefaults()
+        {
+            this.OpenLinksInClassicInterface = true;
+            this.ChangeBusinessUnit = true;
+            this.CloneSecurityRoles = true;
+            this.ClearTargetUserRolesListBeforeClone = true;
+            this.CloneTeams = true;
+            this.ClearTargetTeamsListBeforeClone = true;
+
+        }
     }
 }
