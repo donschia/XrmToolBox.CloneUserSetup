@@ -263,14 +263,9 @@
     <Content Include="Icons\iconfinder_Sync_132655.png" />
   </ItemGroup>
   <ItemGroup />
+	
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>IF $(ConfigurationName) == Debug (
-      IF NOT EXIST Plugins mkdir Plugins
-      xcopy "$(TargetDir)$(TargetFileName)" "$(TargetDir)Plugins\" /Y
-      xcopy "$(TargetDir)$(TargetName).pdb" "$(TargetDir)Plugins\" /Y
-      )</PostBuildEvent>
-  </PropertyGroup>
+ 
   <Import Project="..\packages\Microsoft.Web.WebView2.1.0.1343.22\build\Microsoft.Web.WebView2.targets" Condition="Exists('..\packages\Microsoft.Web.WebView2.1.0.1343.22\build\Microsoft.Web.WebView2.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -278,6 +273,33 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.Web.WebView2.1.0.1343.22\build\Microsoft.Web.WebView2.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Web.WebView2.1.0.1343.22\build\Microsoft.Web.WebView2.targets'))" />
   </Target>
+	<Target Name="PostBuildMacros">
+		<GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
+			<Output TaskParameter="Assemblies" ItemName="Targets" />
+		</GetAssemblyIdentity>
+		<PropertyGroup>
+			<VersionInfo>%(AssemblyInfo.Version)</VersionInfo>
+		</PropertyGroup>
+		<ItemGroup>
+			<VersionNumber Include="@(Targets->'%(Version)')"/>
+		</ItemGroup>
+	</Target>
+	<PropertyGroup>
+		<PostBuildEventDependsOn>
+			$(PostBuildEventDependsOn);
+			PostBuildMacros;
+		</PostBuildEventDependsOn>
+		<PostBuildEvent>
+	echo THE ASSEMBLY VERSION IS: @(VersionNumber)
+	IF $(ConfigurationName) == Debug (
+	IF NOT EXIST Plugins mkdir Plugins
+	xcopy "$(TargetDir)$(TargetFileName)" "$(TargetDir)Plugins\" /Y
+	xcopy "$(TargetDir)$(TargetName).pdb" "$(TargetDir)Plugins\" /Y
+	)
+			
+	powershell Compress-Archive -Path '$(TargetDir)$(TargetFileName)' -DestinationPath "$(ProjectDir)Deployment\$(TargetFileName).@(VersionNumber).$(ConfigurationName).zip" -Force
+		</PostBuildEvent>
+	</PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.  
   <Target Name="BeforeBuild">
