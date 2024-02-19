@@ -10,10 +10,10 @@
         <projectUrl>https://github.com/donschia/XrmToolBox.CloneUserSetup</projectUrl>
         <iconUrl>https://raw.githubusercontent.com/donschia/XrmToolBox.CloneUserSetup/34c35bf7e134f648fa0d1fd71862ea78f4ecce7e/Schiavone.XrmToolBox.CloneUserSetup/Icons/CloneUserSetup.Icon.png</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>XrmToolBox plugin to clone Business Unit, Security Roles, and Team memberships from a Source User to a Target User.</description>
-        <releaseNotes>Initial deployment.</releaseNotes>
-        <copyright>Copyright 2023</copyright>
-        <tags>Security Roles Management Clone Users XrmToolBox</tags>
+        <description>XrmToolBox plugin to clone Business Unit, Security Roles, and Team memberships from a Source User to a Target User.  Copy source user Security Roles and Teams to target user while preserving existing lists.  Change Business Unit while preserving Roles.</description>
+        <releaseNotes>Can now merge Roles and Teams to Target user without replacing existing lists!  Added ability to separately change Business Unit while preserving Roles. UI settings now persists via settings file.  Updated to latest components.</releaseNotes>
+        <copyright>Copyright 2024</copyright>
+        <tags>Security Roles Management Clone Users XrmToolBox Business Unit</tags>
 	    <dependencies>
 			<dependency id="XrmToolBox" version="1.2022.10.58" />
 	    </dependencies>
