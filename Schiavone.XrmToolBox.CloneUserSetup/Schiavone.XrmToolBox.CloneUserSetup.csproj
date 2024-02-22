@@ -300,7 +300,7 @@
 	xcopy "$(TargetDir)$(TargetName).pdb" "$(TargetDir)Plugins\" /Y
 	)
 			
-	powershell Compress-Archive -Path '$(TargetDir)$(TargetFileName)' -DestinationPath "$(ProjectDir)Deployment\$(TargetFileName).@(VersionNumber).$(ConfigurationName).zip" -Force
+	powershell "Compress-Archive -Path '$(TargetDir)$(TargetFileName)' -DestinationPath '$(ProjectDir)Deployment\$(TargetFileName).@(VersionNumber).$(ConfigurationName).zip' -Force"
 		</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
