@@ -329,7 +329,11 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
 
                 // Sort these by the name, for goodness sake
                 queryExpression.AddOrder("fullname", OrderType.Ascending);
-                args.Result = base.Service.RetrieveMultiple(queryExpression);
+
+                // This had a limit of 5000 records
+                // args.Result = base.Service.RetrieveMultiple(queryExpression);
+                // This will use paging to get more than 5000 records
+                args.Result = Extensions.RetrieveAllRecordsQueryExpression(base.Service, queryExpression);
             });
             workAsyncInfo.PostWorkCallBack = ((RunWorkerCompletedEventArgs args) => {
                 if (args.Error != null)
@@ -850,7 +854,14 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             var targetUserId = this.TargetUser.SelectedValue.ToString();
             bool includeInactiveUsers = chkIncludeInactiveUsersInSourceUserList.Checked;
             // Refresh the lists
-            GetUsers(sourceUserId, targetUserId, includeInactiveUsers);
+            if (sourceUserId == null && targetUserId == null)
+            {
+                MessageBox.Show("Unable to retrieve User Lists.");
+            }
+            else
+            {
+                GetUsers(sourceUserId, targetUserId, includeInactiveUsers);
+            }
         }
 
         private void label2_Click(object sender, EventArgs e)
