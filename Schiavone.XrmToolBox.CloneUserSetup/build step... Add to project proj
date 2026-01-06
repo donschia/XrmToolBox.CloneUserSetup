@@ -11,3 +11,8 @@
       )
 powershell Compress-Archive -Path '$(TargetDir)$(TargetFileName)' -DestinationPath "$(ProjectDir)Deployment\$(TargetFileName).@(Targets->'%(Version)').$(ConfigurationName).zip" -Force</PostBuildEvent>
   </PropertyGroup>
+
+
+--
+ALSO TO GET IT READY TO DEPLOY DO THIS
+Nuget pack Schiavone.XrmToolBox.CloneUserSetup.csproj -Properties Configuration=Release

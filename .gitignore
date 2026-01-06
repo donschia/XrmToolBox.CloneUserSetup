@@ -361,3 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Schiavone.XrmToolBox.CloneUserSetup/Schiavone.XrmToolBox.CloneUserSetup - Copy.csproj
+/Schiavone.XrmToolBox.CloneUserSetup/Schiavone.XrmToolBox.CloneUserSetup_backup.nuspec

@@ -115,6 +115,7 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             this.toolStripMenu = new System.Windows.Forms.ToolStrip();
             this.tsbClose = new System.Windows.Forms.ToolStripButton();
             this.tssSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsbResetToDefaults = new System.Windows.Forms.ToolStripButton();
             this.tsbRefreshUserLists = new System.Windows.Forms.ToolStripButton();
             this.tsDoTheSync = new System.Windows.Forms.ToolStripButton();
             this.chkOpenLinksInClassicInterface = new System.Windows.Forms.CheckBox();
@@ -144,7 +145,6 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             this.label4 = new System.Windows.Forms.Label();
             this.btnOpenTarget = new System.Windows.Forms.Button();
             this.lvTargetRoles = new System.Windows.Forms.ListView();
-            this.tsbResetToDefaults = new System.Windows.Forms.ToolStripButton();
             this.toolStripMenu.SuspendLayout();
             this.grpSourceUser.SuspendLayout();
             this.grpTargetUser.SuspendLayout();
@@ -178,6 +178,15 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             // 
             this.tssSeparator1.Name = "tssSeparator1";
             this.tssSeparator1.Size = new System.Drawing.Size(6, 31);
+            // 
+            // tsbResetToDefaults
+            // 
+            this.tsbResetToDefaults.Image = ((System.Drawing.Image)(resources.GetObject("tsbResetToDefaults.Image")));
+            this.tsbResetToDefaults.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbResetToDefaults.Name = "tsbResetToDefaults";
+            this.tsbResetToDefaults.Size = new System.Drawing.Size(125, 28);
+            this.tsbResetToDefaults.Text = "Reset To Defaults";
+            this.tsbResetToDefaults.Click += new System.EventHandler(this.tsbResetToDefaults_Click);
             // 
             // tsbRefreshUserLists
             // 
@@ -300,12 +309,12 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             this.lvSourceTeams.UseCompatibleStateImageBehavior = false;
             this.lvSourceTeams.View = System.Windows.Forms.View.List;
             // 
-            // Source
+            // SourceUser
             // 
             this.SourceUser.FormattingEnabled = true;
             this.SourceUser.Location = new System.Drawing.Point(16, 36);
             this.SourceUser.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.SourceUser.Name = "Source User";
+            this.SourceUser.Name = "SourceUser";
             this.SourceUser.Size = new System.Drawing.Size(420, 21);
             this.SourceUser.TabIndex = 24;
             this.SourceUser.SelectionChangeCommitted += new System.EventHandler(this.Source_SelectionChangeCommitted);
@@ -459,6 +468,7 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             this.label2.TabIndex = 26;
             this.label2.Text = "     Target User";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label2.DoubleClick += new System.EventHandler(this.label2_DoubleClick_1);
             // 
             // lvTargetTeams
             // 
@@ -471,12 +481,12 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             this.lvTargetTeams.UseCompatibleStateImageBehavior = false;
             this.lvTargetTeams.View = System.Windows.Forms.View.List;
             // 
-            // Target
+            // TargetUser
             // 
             this.TargetUser.FormattingEnabled = true;
             this.TargetUser.Location = new System.Drawing.Point(12, 37);
             this.TargetUser.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.TargetUser.Name = "Target User";
+            this.TargetUser.Name = "TargetUser";
             this.TargetUser.Size = new System.Drawing.Size(493, 21);
             this.TargetUser.TabIndex = 25;
             this.TargetUser.SelectionChangeCommitted += new System.EventHandler(this.Target_SelectionChangeCommitted);
@@ -510,15 +520,6 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             this.lvTargetRoles.TabIndex = 28;
             this.lvTargetRoles.UseCompatibleStateImageBehavior = false;
             this.lvTargetRoles.View = System.Windows.Forms.View.List;
-            // 
-            // tsbResetToDefaults
-            // 
-            this.tsbResetToDefaults.Image = ((System.Drawing.Image)(resources.GetObject("tsbResetToDefaults.Image")));
-            this.tsbResetToDefaults.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbResetToDefaults.Name = "tsbResetToDefaults";
-            this.tsbResetToDefaults.Size = new System.Drawing.Size(124, 28);
-            this.tsbResetToDefaults.Text = "Reset To Defaults";
-            this.tsbResetToDefaults.Click += new System.EventHandler(this.tsbResetToDefaults_Click);
             // 
             // MyPluginControl
             // 

@@ -1,26 +1,27 @@
-﻿using System;
+﻿using McTools.Xrm.Connection;
+using Microsoft.Crm.Sdk.Messages;
+using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Query;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Data;
+using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using XrmToolBox.Extensibility;
-using Microsoft.Xrm.Sdk.Query;
-using Microsoft.Xrm.Sdk;
-using McTools.Xrm.Connection;
-using System.Web.UI.WebControls;
-using Microsoft.Crm.Sdk.Messages;
-using System.Diagnostics;
-using System.Windows.Navigation;
-using static System.Windows.Forms.LinkLabel;
-using System.Collections;
 using System.Web.Services.Description;
-using NuGet;
+using System.Web.UI.WebControls;
+using System.Windows.Forms;
+using System.Windows.Navigation;
+//using NuGet;
 using System.Xml.Linq;
-using Newtonsoft.Json.Linq;
+using XrmToolBox.Extensibility;
+using static System.Windows.Forms.LinkLabel;
+//using Newtonsoft.Json.Linq;
 
 namespace Schiavone.XrmToolBox.CloneUserSetup
 {
@@ -1088,6 +1089,12 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             _mySettings.ResetToDefaults();
             LoadUIFromSettings();
 
+        }
+
+        private void label2_DoubleClick_1(object sender, EventArgs e)
+        {
+            string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            MessageBox.Show($"Current plugin version: {version}");  
         }
 
         /*
