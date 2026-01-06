@@ -190,6 +190,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Deployment\Schiavone.XrmToolBox.CloneUserSetup.dll.1.1.9501.29965.Release.zip" />
     <None Include="packages.config" />
     <None Include="Schiavone.XrmToolBox.CloneUserSetup.nuspec" />
   </ItemGroup>
