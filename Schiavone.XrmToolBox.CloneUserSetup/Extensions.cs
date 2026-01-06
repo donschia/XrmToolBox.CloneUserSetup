@@ -33,6 +33,35 @@ namespace Schiavone.XrmToolBox.CloneUserSetup
             return finalEntityCollection;
         }
 
+        public static EntityCollection RetrieveAllRecordsQueryExpression(IOrganizationService service, QueryExpression query)
+        {
+            var pageNumber = 1;
+            var pagingCookie = string.Empty;
+            // var result = new List<Entity>();
+            EntityCollection response;
+            EntityCollection finalEntityCollection = new EntityCollection();
+            do
+            {
+                if (pageNumber != 1)
+                {
+                    query.PageInfo.PageNumber = pageNumber;
+                    query.PageInfo.PagingCookie = pagingCookie;
+                }
+                response = service.RetrieveMultiple(query);
+                if (response.MoreRecords)
+                {
+                    pageNumber++;
+                    pagingCookie = response.PagingCookie;
+                }
+                //Add the result from RetrieveMultiple to the List to be returned.
+                //result.AddRange(resp.Entities);
+                //Add the result from RetrieveMultiple to the EntityCollection to be returned.
+                finalEntityCollection.Entities.AddRange(response.Entities); 
+            }
+            while (response.MoreRecords);
+
+            return finalEntityCollection;
+        }
         // This needs to be placed in a public static class and it's namespace added as a using to whatever class you'd like to use it in
 
         /// <summary>
